@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PV247 - Team project
 
-## Getting Started
+## Installation
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```shell
+npm i
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```shell
+# Copy development env template file and modify it with correct DB URL and auth token.
+# Both env variables must be set, auth token can't be empty - you can set it to something random if you don't have auth token for local db.
+cp .env.development.template .env.development
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```shell
+# Copy production env template file and modify it with correct DB URL and auth token.
+cp .env.production.template .env.production
+```
 
-## Learn More
+## Development
 
-To learn more about Next.js, take a look at the following resources:
+### Run Next.js dev server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Run a local turso database
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```shell
+turso dev --db-file dev.db
+```
 
-## Deploy on Vercel
+### Run a local drizzle studio
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```shell
+npm run drizzle-studio
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```shell
+npm run dev
+```
+
+### If the schema is changed, generate a new migration and apply it
+
+```shell
+npm run drizzle-migrate
+```
+
+## Production
+
+### Build and start locally for production testing
+
+```shell
+npm run prod
+```

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
-	<html lang="en">
+	<html lang="en" className="dark">
 		<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 			<Providers>{children}</Providers>
 		</body>
