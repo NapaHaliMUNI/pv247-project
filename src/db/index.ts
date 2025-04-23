@@ -1,5 +1,7 @@
-import {drizzle} from 'drizzle-orm/libsql';
-import {createClient} from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
+import { createClient } from '@libsql/client';
+
+import { test } from '@/db/schema/test';
 
 const client = createClient({
 	url: process.env.TURSO_DATABASE_URL!,
@@ -7,4 +9,8 @@ const client = createClient({
 });
 
 // TODO: add schemas and relations
-export const db = drizzle(client);
+export const db = drizzle(client, {
+	schema: {
+		test
+	}
+});
