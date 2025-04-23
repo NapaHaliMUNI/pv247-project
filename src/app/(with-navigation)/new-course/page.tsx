@@ -1,3 +1,3 @@
-const NewCoursePage = () => <div>new course page</div>;
+const NewCoursePage = () => <div>new course page TODO</div>;
 
 export default NewCoursePage;
