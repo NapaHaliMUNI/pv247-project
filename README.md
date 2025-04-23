@@ -11,12 +11,12 @@ npm i
 ```shell
 # Copy development env template file and modify it with correct DB URL and auth token.
 # Both env variables must be set, auth token can't be empty - you can set it to something random if you don't have auth token for local db.
-cp .env.development.template .env.development
+cp .env.development.example .env.development
 ```
 
 ```shell
 # Copy production env template file and modify it with correct DB URL and auth token.
-cp .env.production.template .env.production
+cp .env.production.example .env.production
 ```
 
 ## Development
