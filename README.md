@@ -42,7 +42,7 @@ npm run dev
 ### If the schema is changed, generate a new migration and apply it
 
 ```shell
-npm run drizzle-migrate
+npm run drizzle-migrate-dev
 ```
 
 ## Production
@@ -51,4 +51,10 @@ npm run drizzle-migrate
 
 ```shell
 npm run prod
+```
+
+### If the schema is changed, generate a new migration and apply it
+
+```shell
+npm run drizzle-migrate-prod
 ```
