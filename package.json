@@ -10,6 +10,8 @@
     "lint": "next lint",
     "lint-fix": "eslint --fix .",
     "drizzle-migrate-dev": "npx drizzle-kit generate --config=drizzle-dev.config.ts && npx drizzle-kit migrate --config=drizzle-dev.config.ts",
+    "lint-fix": "eslint --fix .",
+    "drizzle-migrate-prod-dev": "npx drizzle-kit generate --config=drizzle-prod.config.ts --config=drizzle-dev.config.ts && npx drizzle-kit migrate --config=drizzle-prod.config.ts --config=drizzle-dev.config.ts",
     "drizzle-migrate-prod": "npx drizzle-kit generate --config=drizzle-prod.config.ts && npx drizzle-kit migrate --config=drizzle-prod.config.ts",
     "drizzle-studio-dev": "npx drizzle-kit studio --config=drizzle-dev.config.ts",
     "drizzle-studio-prod": "npx drizzle-kit studio --config=drizzle-prod.config.ts"
@@ -44,6 +46,8 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-prettier": "^5.2.6",
     "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.1.4",
     "tsx": "^4.19.3",
     "typescript": "^5"
