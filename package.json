@@ -8,8 +8,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "drizzle-migrate": "npx drizzle-kit generate && npx drizzle-kit migrate",
-    "drizzle-studio": "npx drizzle-kit studio"
+    "lint-fix": "eslint --fix .",
+    "drizzle-migrate-dev": "npx drizzle-kit generate --config=drizzle-dev.config.ts && npx drizzle-kit migrate --config=drizzle-dev.config.ts",
+    "drizzle-migrate-prod": "npx drizzle-kit generate --config=drizzle-prod.config.ts && npx drizzle-kit migrate --config=drizzle-prod.config.ts",
+    "drizzle-studio-dev": "npx drizzle-kit studio --config=drizzle-dev.config.ts",
+    "drizzle-studio-prod": "npx drizzle-kit studio --config=drizzle-prod.config.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.15.4",
