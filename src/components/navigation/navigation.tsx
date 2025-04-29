@@ -6,7 +6,7 @@ import {
 import NavigationMenuLink from '@/components/navigation/navigation-menu-link';
 
 const Navigation = () => (
-	<div className="sticky top-0 z-100 bg-primary max-w-full flex items-center">
+	<div className="bg-primary sticky top-0 z-100 flex max-w-full items-center">
 		<NavigationMenu>
 			<NavigationMenuList>
 				<NavigationMenuItem />

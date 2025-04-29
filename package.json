@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint-fix": "eslint --fix .",
     "drizzle-migrate-dev": "npx drizzle-kit generate --config=drizzle-dev.config.ts && npx drizzle-kit migrate --config=drizzle-dev.config.ts",
     "drizzle-migrate-prod": "npx drizzle-kit generate --config=drizzle-prod.config.ts && npx drizzle-kit migrate --config=drizzle-prod.config.ts",
     "drizzle-studio": "npx drizzle-kit studio"
