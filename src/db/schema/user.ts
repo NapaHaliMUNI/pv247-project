@@ -15,7 +15,6 @@ export const user = sqliteTable('user', {
 	updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`)
 });
 
-// In user.ts, update userRelations:
 export const userRelations = {
 	roles: {
 		references: [userRoles.roleId, userRoles.userId],

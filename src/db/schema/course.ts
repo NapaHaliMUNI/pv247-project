@@ -10,7 +10,7 @@ import { user } from './user';
 export type CourseTable = ReturnType<typeof createCourseTable>;
 
 // Create the table in a function
-function createCourseTable() {
+const createCourseTable = () => {
 	return sqliteTable('course', {
 		id: integer('id').primaryKey({ autoIncrement: true }),
 		title: text('title').notNull(),
@@ -28,7 +28,7 @@ function createCourseTable() {
 			.notNull()
 			.references(() => user.id)
 	});
-}
+};
 
 // Create the actual table
 export const course = createCourseTable();
