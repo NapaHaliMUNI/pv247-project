@@ -18,7 +18,7 @@ const createCourseTable = () =>
 		longDescription: text('long_description').notNull(),
 		difficulty: integer('difficulty').notNull(), // 1-5 scale
 		length: text('length').notNull(), // e.g., "10-15 minutes", "15-30 minutes", "30+ minutes"
-		prerequisiteId: integer('prerequisite_id'), // Will reference course.id after table creation
+		prerequisiteId: integer('prerequisite_id'), // Reference to course.id is defined later in courseRelations to avoid circular dependency during table creation
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 		createdBy: integer('created_by')
 			.notNull()
