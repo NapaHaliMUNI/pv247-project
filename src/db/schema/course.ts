@@ -6,31 +6,24 @@ import { type z } from 'zod';
 import { courseLesson } from './course-lesson';
 import { user } from './user';
 
-// Define the table type first to resolve the circular reference
-export type CourseTable = ReturnType<typeof createCourseTable>;
-
 // Create the table in a function
-const createCourseTable = () =>
-	sqliteTable('course', {
-		id: integer('id').primaryKey({ autoIncrement: true }),
-		title: text('title').notNull(),
-		shortDescription: text('short_description').notNull(),
-		longDescription: text('long_description').notNull(),
-		difficulty: integer('difficulty').notNull(), // 1-5 scale
-		length: text('length').notNull(), // e.g., "10-15 minutes", "15-30 minutes", "30+ minutes"
-		prerequisiteId: integer('prerequisite_id'), // Reference to course.id is defined later in courseRelations to avoid circular dependency during table creation
-		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
-		createdBy: integer('created_by')
-			.notNull()
-			.references(() => user.id),
-		updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
-		updatedBy: integer('updated_by')
-			.notNull()
-			.references(() => user.id)
-	});
-
-// Create the actual table
-export const course = createCourseTable();
+export const course = sqliteTable('course', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	title: text('title').notNull(),
+	shortDescription: text('short_description').notNull(),
+	longDescription: text('long_description').notNull(),
+	difficulty: integer('difficulty').notNull(), // 1-5 scale
+	length: text('length').notNull(), // e.g., "10-15 minutes", "15-30 minutes", "30+ minutes"
+	prerequisiteId: integer('prerequisite_id'), // Reference to course.id is defined later in courseRelations to avoid circular dependency during table creation
+	createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
+	createdBy: integer('created_by')
+		.notNull()
+		.references(() => user.id),
+	updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
+	updatedBy: integer('updated_by')
+		.notNull()
+		.references(() => user.id)
+});
 
 // Set up the references after the table is created
 export const courseRelations = {
