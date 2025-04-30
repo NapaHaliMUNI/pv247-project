@@ -6,15 +6,14 @@ import { z } from 'zod';
 import { courseLesson } from './course-lesson';
 import { user } from './user';
 
-// Define question types
-export const QUESTION_TYPES = {
-	CHECKBOX: 'checkbox',
-	RADIO: 'radio',
-	TRUE_FALSE: 'true_false',
-	TEXT: 'text'
-} as const;
-
-export type QuestionType = (typeof QUESTION_TYPES)[keyof typeof QUESTION_TYPES];
+// Define role enum using zod for type safety
+export const questionTypeSchema = z.enum([
+	'radio',
+	'checkbox',
+	'true_false',
+	'text'
+]);
+export type QuestionType = z.infer<typeof questionTypeSchema>;
 
 export const courseQuestionSchema = z.object({
 	questionText: z.string(),
@@ -35,9 +34,9 @@ export const courseLessonQuestion = sqliteTable('course_lesson_question', {
 		.notNull()
 		.references(() => courseLesson.id),
 	questionOrder: integer('question_order').notNull(), // Order within the lesson
-	type: text('type').notNull(), // 'checkbox', 'radio', 'true_false', 'text'
+	type: text('type', { enum: questionTypeSchema.options }).notNull(),
 	title: text('title').notNull(),
-	questionData: text('question_data').notNull(), // JSON string with question details
+	questionData: text('question_data', { mode: 'json' }).notNull(), // JSON string with question details
 	createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 	createdBy: integer('created_by')
 		.notNull()

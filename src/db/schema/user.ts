@@ -17,7 +17,7 @@ export const user = sqliteTable('user', {
 
 export const userRelations = {
 	roles: {
-		references: [userRoles.roleId, userRoles.userId],
+		references: [userRoles.userId, userRoles.roleId],
 		through: {
 			columns: [userRoles.userId, userRoles.roleId]
 		}
