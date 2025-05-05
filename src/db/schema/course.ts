@@ -4,9 +4,7 @@ import {
 	text,
 	foreignKey
 } from 'drizzle-orm/sqlite-core';
-import { sql } from 'drizzle-orm';
-import { createSelectSchema } from 'drizzle-zod';
-import { type z } from 'zod';
+import { relations, sql } from 'drizzle-orm';
 
 import { courseLesson } from './course-lesson';
 import { user } from './user';
@@ -23,13 +21,9 @@ export const course = sqliteTable(
 		length: text('length').notNull(), // e.g., "10-15 minutes", "15-30 minutes", "30+ minutes"
 		prerequisiteId: integer('prerequisite_id'), // Reference to course.id
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
-		createdBy: integer('created_by')
-			.notNull()
-			.references(() => user.id),
+		createdBy: integer('created_by').notNull(),
 		updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
-		updatedBy: integer('updated_by')
-			.notNull()
-			.references(() => user.id)
+		updatedBy: integer('updated_by').notNull()
 	},
 	table => [
 		foreignKey({
@@ -39,24 +33,21 @@ export const course = sqliteTable(
 	]
 );
 
-// Set up the references after the table is created
-export const courseRelations = {
-	lessons: {
-		columns: [course.id],
-		references: [courseLesson.courseId]
-	},
-	createdByUser: {
-		columns: [course.createdBy],
+export const courseRelations = relations(course, ({ one, many }) => ({
+	createdByUser: one(user, {
+		fields: [course.createdBy],
 		references: [user.id]
-	},
-	updatedByUser: {
-		columns: [course.updatedBy],
+	}),
+	updatedByUser: one(user, {
+		fields: [course.updatedBy],
 		references: [user.id]
-	}
-};
-
-export const courseSelectSchema = createSelectSchema(course).strict();
-export type CourseSelectSchema = z.infer<typeof courseSelectSchema>;
+	}),
+	prerequisiteCourse: one(course, {
+		fields: [course.prerequisiteId],
+		references: [course.id]
+	}),
+	courseLessons: many(courseLesson)
+}));
 
 export type Course = typeof course.$inferSelect;
 export type NewCourse = typeof course.$inferInsert;
