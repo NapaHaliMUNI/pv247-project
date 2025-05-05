@@ -8,6 +8,20 @@ import { relations, sql } from 'drizzle-orm';
 
 import { courseLesson } from './course-lesson';
 import { user } from './user';
+import { z } from 'zod';
+
+export const courseDifficultySchema = z.enum([
+	'Beginner',
+	'Intermediate',
+	'Advanced',
+	'Expert',
+	'Master'
+]);
+export const courseLengthSchema = z.enum([
+	'Short (5-15 minutes)',
+	'Medium (15-30 minutes)',
+	'Long (30+ minutes)'
+]);
 
 // Create the table in a function
 export const course = sqliteTable(
@@ -17,9 +31,11 @@ export const course = sqliteTable(
 		title: text('title').notNull(),
 		shortDescription: text('short_description').notNull(),
 		longDescription: text('long_description').notNull(),
-		difficulty: integer('difficulty').notNull(), // 1-5 scale
-		length: text('length').notNull(), // e.g., "10-15 minutes", "15-30 minutes", "30+ minutes"
-		prerequisiteId: integer('prerequisite_id'), // Reference to course.id
+		difficulty: text('difficulty', {
+			enum: courseDifficultySchema.options
+		}).notNull(),
+		length: text('length', { enum: courseLengthSchema.options }).notNull(),
+		prerequisiteId: integer('prerequisite_id'),
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 		createdBy: integer('created_by').notNull(),
 		updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
