@@ -1,13 +1,11 @@
-import { asc, count, eq, getTableColumns, gt, sql } from 'drizzle-orm';
+import { asc, count, eq } from 'drizzle-orm';
+
 import { db } from '..';
-
 import { type User, user } from '../schema/user';
-import { type UserRole, userRoles } from '../schema/user-roles';
-import { type UserCourse, userCourses } from '../schema/user-courses';
-
-import { type Role, role } from '../schema/role';
-
-import { type Course, course } from '../schema/course';
+import { userRoles } from '../schema/user-roles';
+import { userCourses } from '../schema/user-courses';
+import { type Role } from '../schema/role';
+import { type Course } from '../schema/course';
 import { type CourseLesson, courseLesson } from '../schema/course-lesson';
 import {
 	type CourseLessonQuestion,
@@ -61,4 +59,30 @@ export const getUserCoursesCount = async (
 	if (!userCoursesCount) return 0;
 
 	return userCoursesCount.count;
+};
+
+export const getCourseLessons = async (
+	courseId: Course['id']
+): Promise<CourseLesson[]> => {
+	const courseLessons = await db.query.courseLesson.findMany({
+		where: eq(courseLesson.courseId, courseId),
+		orderBy: [asc(courseLesson.lessonOrder)]
+	});
+
+	if (!courseLessons) return [];
+
+	return courseLessons;
+};
+
+export const getCourseLessonQuestions = async (
+	lessonId: CourseLesson['id']
+): Promise<CourseLessonQuestion[]> => {
+	const courseLessonQuestions = await db.query.courseLessonQuestion.findMany({
+		where: eq(courseLessonQuestion.lessonId, lessonId),
+		orderBy: [asc(courseLessonQuestion.questionOrder)]
+	});
+
+	if (!courseLessonQuestions) return [];
+
+	return courseLessonQuestions;
 };

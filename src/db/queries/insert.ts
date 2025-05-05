@@ -1,15 +1,12 @@
 import { db } from '..';
-
-import { NewUser, user } from '../schema/user';
-import { NewUserRole, userRoles } from '../schema/user-roles';
-import { NewUserCourse, userCourses } from '../schema/user-courses';
-
-import { NewRole, role } from '../schema/role';
-
-import { NewCourse, course } from '../schema/course';
-import { NewCourseLesson, courseLesson } from '../schema/course-lesson';
+import { type NewUser, user } from '../schema/user';
+import { type NewUserRole, userRoles } from '../schema/user-roles';
+import { type NewUserCourse, userCourses } from '../schema/user-courses';
+import { type NewRole, role } from '../schema/role';
+import { type NewCourse, course } from '../schema/course';
+import { type NewCourseLesson, courseLesson } from '../schema/course-lesson';
 import {
-	NewCourseLessonQuestion,
+	type NewCourseLessonQuestion,
 	courseLessonQuestion
 } from '../schema/course-lesson-question';
 
