@@ -1,8 +1,7 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { db } from '..';
 import { type User, user } from '../schema/user';
-import { type UserRole, userRoles } from '../schema/user-roles';
 import { type UserCourse, userCourses } from '../schema/user-courses';
 import { type Role, role } from '../schema/role';
 import { type Course, course } from '../schema/course';
@@ -26,28 +25,17 @@ export const updateUser = async (
 	return updatedUser;
 };
 
-export const updateUserRole = async (
-	userRoleId: UserRole['userId'],
-	userRoleData: Partial<UserRole>
-) => {
-	const updatedUserRole = await db
-		.update(userRoles)
-		.set(userRoleData)
-		.where(eq(userRoles.userId, userRoleId))
-		.returning()
-		.get();
-
-	return updatedUserRole;
-};
-
 export const updateUserCourse = async (
-	userCourseId: UserCourse['userId'],
+	userId: UserCourse['userId'],
+	courseId: UserCourse['courseId'],
 	userCourseData: Partial<UserCourse>
 ) => {
 	const updatedUserCourse = await db
 		.update(userCourses)
 		.set(userCourseData)
-		.where(eq(userCourses.userId, userCourseId))
+		.where(
+			and(eq(userCourses.userId, userId), eq(userCourses.courseId, courseId))
+		)
 		.returning()
 		.get();
 

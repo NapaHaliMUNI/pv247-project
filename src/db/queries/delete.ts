@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { db } from '..';
 import { type User, user } from '../schema/user';
@@ -22,20 +22,28 @@ export const deleteUser = async (userId: User['id']) => {
 	return deletedUser;
 };
 
-export const deleteUserRole = async (userRoleId: UserRole['userId']) => {
+export const deleteUserRole = async (
+	userId: UserRole['userId'],
+	roleId: UserRole['roleId']
+) => {
 	const deletedUserRole = await db
 		.delete(userRoles)
-		.where(eq(userRoles.userId, userRoleId))
+		.where(and(eq(userRoles.userId, userId), eq(userRoles.roleId, roleId)))
 		.returning()
 		.get();
 
 	return deletedUserRole;
 };
 
-export const deleteUserCourse = async (userCourseId: UserCourse['userId']) => {
+export const deleteUserCourse = async (
+	userId: UserCourse['userId'],
+	courseId: UserCourse['courseId']
+) => {
 	const deletedUserCourse = await db
 		.delete(userCourses)
-		.where(eq(userCourses.userId, userCourseId))
+		.where(
+			and(eq(userCourses.userId, userId), eq(userCourses.courseId, courseId))
+		)
 		.returning()
 		.get();
 
