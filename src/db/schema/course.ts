@@ -5,10 +5,10 @@ import {
 	foreignKey
 } from 'drizzle-orm/sqlite-core';
 import { relations, sql } from 'drizzle-orm';
+import { z } from 'zod';
 
 import { courseLesson } from './course-lesson';
 import { user } from './user';
-import { z } from 'zod';
 
 export const courseDifficultySchema = z.enum([
 	'Beginner',
