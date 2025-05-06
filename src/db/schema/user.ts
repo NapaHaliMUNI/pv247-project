@@ -1,7 +1,5 @@
 import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
-import { sql } from 'drizzle-orm';
-import { createSelectSchema } from 'drizzle-zod';
-import { type z } from 'zod';
+import { relations, sql } from 'drizzle-orm';
 
 import { userRoles } from './user-roles';
 import { userCourses } from './user-courses';
@@ -15,23 +13,10 @@ export const user = sqliteTable('user', {
 	updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`)
 });
 
-export const userRelations = {
-	roles: {
-		references: [userRoles.userId, userRoles.roleId],
-		through: {
-			columns: [userRoles.userId, userRoles.roleId]
-		}
-	},
-	courses: {
-		references: [userCourses.courseId, userCourses.userId],
-		through: {
-			columns: [userCourses.userId, userCourses.courseId]
-		}
-	}
-};
-
-export const userSelectSchema = createSelectSchema(user).strict();
-export type UserSelectSchema = z.infer<typeof userSelectSchema>;
+export const userRelations = relations(user, ({ many }) => ({
+	userRoles: many(userRoles),
+	userCourses: many(userCourses)
+}));
 
 export type User = typeof user.$inferSelect;
 export type NewUser = typeof user.$inferInsert;

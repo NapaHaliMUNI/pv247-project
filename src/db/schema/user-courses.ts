@@ -4,9 +4,7 @@ import {
 	integer,
 	text
 } from 'drizzle-orm/sqlite-core';
-import { sql } from 'drizzle-orm';
-import { createSelectSchema } from 'drizzle-zod';
-import { type z } from 'zod';
+import { relations, sql } from 'drizzle-orm';
 
 import { user } from './user';
 import { course } from './course';
@@ -15,15 +13,9 @@ import { courseLesson } from './course-lesson';
 export const userCourses = sqliteTable(
 	'user_courses',
 	{
-		userId: integer('user_id')
-			.notNull()
-			.references(() => user.id),
-		courseId: integer('course_id')
-			.notNull()
-			.references(() => course.id),
-		currentLessonId: integer('current_lesson_id').references(
-			() => courseLesson.id
-		),
+		userId: integer('user_id').notNull(),
+		courseId: integer('course_id').notNull(),
+		currentLessonId: integer('current_lesson_id'),
 		completed: integer('completed', { mode: 'boolean' })
 			.notNull()
 			.default(false),
@@ -34,23 +26,20 @@ export const userCourses = sqliteTable(
 	table => [primaryKey({ columns: [table.userId, table.courseId] })]
 );
 
-export const userCoursesRelations = {
-	user: {
-		columns: [userCourses.userId],
+export const userCoursesRelations = relations(userCourses, ({ one }) => ({
+	user: one(user, {
+		fields: [userCourses.userId],
 		references: [user.id]
-	},
-	course: {
-		columns: [userCourses.courseId],
+	}),
+	course: one(course, {
+		fields: [userCourses.courseId],
 		references: [course.id]
-	},
-	currentLesson: {
-		columns: [userCourses.currentLessonId],
+	}),
+	currentLesson: one(courseLesson, {
+		fields: [userCourses.currentLessonId],
 		references: [courseLesson.id]
-	}
-};
-
-export const userCoursesSelectSchema = createSelectSchema(userCourses).strict();
-export type UserCoursesSelectSchema = z.infer<typeof userCoursesSelectSchema>;
+	})
+}));
 
 export type UserCourse = typeof userCourses.$inferSelect;
 export type NewUserCourse = typeof userCourses.$inferInsert;
