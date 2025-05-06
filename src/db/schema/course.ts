@@ -17,7 +17,7 @@ export const courseDifficultySchema = z.enum([
 	'Expert',
 	'Master'
 ]);
-export const courseLengthSchema = z.enum([
+export const courseDurationSchema = z.enum([
 	'Short (5-15 minutes)',
 	'Medium (15-30 minutes)',
 	'Long (30+ minutes)'
@@ -34,7 +34,9 @@ export const course = sqliteTable(
 		difficulty: text('difficulty', {
 			enum: courseDifficultySchema.options
 		}).notNull(),
-		length: text('length', { enum: courseLengthSchema.options }).notNull(),
+		duration: text('duration', {
+			enum: courseDurationSchema.options
+		}).notNull(),
 		prerequisiteId: integer('prerequisite_id'),
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 		createdBy: integer('created_by').notNull(),
