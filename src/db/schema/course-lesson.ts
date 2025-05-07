@@ -17,7 +17,7 @@ export const courseLesson = sqliteTable(
 		courseId: integer('course_id').notNull(),
 		lessonOrder: integer('lesson_order').notNull(), // Order within the course
 		title: text('title').notNull(),
-		theory: text('theory').notNull(),
+		content: text('content').notNull(),
 		videoUrl: text('video_url').notNull(),
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 		createdBy: integer('created_by').notNull(),

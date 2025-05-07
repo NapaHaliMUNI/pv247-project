@@ -6,26 +6,16 @@ import { courseLesson } from './course-lesson';
 import { user } from './user';
 
 // Define role enum using zod for type safety
-export const questionTypeSchema = z.enum([
-	'radio',
-	'checkbox',
-	'true_false',
-	'text'
-]);
+export const questionTypeSchema = z.enum(['radio', 'checkbox', 'true-false']);
 export type QuestionType = z.infer<typeof questionTypeSchema>;
 
-export const courseQuestionSchema = z.object({
-	questionText: z.string(),
-	options: z.array(
-		z.object({
-			id: z.number(),
-			text: z.string()
-		})
-	),
-	correctAnswers: z.array(z.number()) // Array of option IDs that are correct
+export const courseQuestionOption = z.object({
+	id: z.number(),
+	text: z.string(),
+	isCorrect: z.boolean()
 });
 
-export type CourseQuestion = z.infer<typeof courseQuestionSchema>;
+export type CourseQuestionOption = z.infer<typeof courseQuestionOption>;
 
 export const courseLessonQuestion = sqliteTable('course_lesson_question', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
@@ -33,7 +23,10 @@ export const courseLessonQuestion = sqliteTable('course_lesson_question', {
 	questionOrder: integer('question_order').notNull(), // Order within the lesson
 	type: text('type', { enum: questionTypeSchema.options }).notNull(),
 	title: text('title').notNull(),
-	questionData: text('question_data', { mode: 'json' }).notNull(), // JSON string with question details
+	options: text('options', { mode: 'json' })
+		.$type<CourseQuestionOption[]>()
+		.notNull(), // JSON string with question details
+	explanation: text('explanation').notNull(),
 	createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 	createdBy: integer('created_by').notNull(),
 	updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),

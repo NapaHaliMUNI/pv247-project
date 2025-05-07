@@ -29,8 +29,10 @@ export const course = sqliteTable(
 	{
 		id: integer('id').primaryKey({ autoIncrement: true }),
 		title: text('title').notNull(),
+		image: text('image').notNull(),
 		shortDescription: text('short_description').notNull(),
 		longDescription: text('long_description').notNull(),
+		category: text('category').notNull(),
 		difficulty: text('difficulty', {
 			enum: courseDifficultySchema.options
 		}).notNull(),
