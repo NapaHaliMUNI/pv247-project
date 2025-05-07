@@ -3,14 +3,14 @@
 import { ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import type { Course } from '@/db/schema/course';
+import type { NewCourse } from '@/db/schema/course';
 
 import { CourseDetailsForm } from '../forms/details-form';
 import { CoursePreviewCard } from '../cards/preview-card';
 
 type CourseDetailsTabProps = {
-	course: Course;
-	setCourse: (course: Course) => void;
+	course: NewCourse;
+	setCourse: (course: NewCourse) => void;
 	nextStep: () => void;
 };
 

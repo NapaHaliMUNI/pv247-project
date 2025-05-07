@@ -13,12 +13,12 @@ import { courseLessonQuestion } from './course-lesson-question';
 export const courseLesson = sqliteTable(
 	'course_lesson',
 	{
-		id: integer('id').primaryKey({ autoIncrement: true }),
-		courseId: integer('course_id').notNull(),
+		id: text('id').primaryKey(),
+		courseId: text('course_id'),
 		lessonOrder: integer('lesson_order').notNull(), // Order within the course
 		title: text('title').notNull(),
 		content: text('content').notNull(),
-		videoUrl: text('video_url').notNull(),
+		videoUrl: text('video_url'),
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 		createdBy: integer('created_by'),
 		updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),

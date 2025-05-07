@@ -19,24 +19,12 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import type { Course } from '@/db/schema/course';
-
-// Sample categories
-const categories = [
-	'Fundamentals',
-	'Weapon Skills',
-	'Team Tactics',
-	'Maps',
-	'Utility',
-	'Strategy',
-	'Advanced Skills'
-];
-
-// Difficulty levels
-const difficultyLevels = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'];
-
-// Duration options
-const durationOptions = ['1-2 hours', '3-5 hours', '6-10 hours', '10+ hours'];
+import {
+	type NewCourse,
+	courseCategorySchema,
+	courseDifficultySchema,
+	courseDurationSchema
+} from '@/db/schema/course';
 
 // Sample prerequisite courses
 const prerequisiteCourses = [
@@ -47,7 +35,7 @@ const prerequisiteCourses = [
 ];
 
 type CourseDetailsFormProps = {
-	courseState: [Course, (course: Course) => void];
+	courseState: [NewCourse, (course: NewCourse) => void];
 };
 
 export const CourseDetailsForm = ({
@@ -121,14 +109,14 @@ export const CourseDetailsForm = ({
 					<div className="space-y-2">
 						<Label htmlFor="category">Category</Label>
 						<Select
-							value={course.category}
+							value={course.category ?? ''}
 							onValueChange={value => handleSelectChange('category', value)}
 						>
 							<SelectTrigger className="border-[#333333] bg-[#151515] text-white">
 								<SelectValue placeholder="Select category" />
 							</SelectTrigger>
 							<SelectContent className="border-[#333333] bg-[#151515] text-white">
-								{categories.map(category => (
+								{courseCategorySchema.options.map(category => (
 									<SelectItem key={category} value={category}>
 										{category}
 									</SelectItem>
@@ -140,14 +128,14 @@ export const CourseDetailsForm = ({
 					<div className="space-y-2">
 						<Label htmlFor="difficulty">Difficulty Level</Label>
 						<Select
-							value={course.difficulty}
+							value={course.difficulty ?? ''}
 							onValueChange={value => handleSelectChange('difficulty', value)}
 						>
 							<SelectTrigger className="border-[#333333] bg-[#151515] text-white">
 								<SelectValue placeholder="Select difficulty" />
 							</SelectTrigger>
 							<SelectContent className="border-[#333333] bg-[#151515] text-white">
-								{difficultyLevels.map(level => (
+								{courseDifficultySchema.options.map(level => (
 									<SelectItem key={level} value={level}>
 										{level}
 									</SelectItem>
@@ -161,14 +149,14 @@ export const CourseDetailsForm = ({
 					<div className="space-y-2">
 						<Label htmlFor="duration">Estimated Duration</Label>
 						<Select
-							value={course.duration}
+							value={course.duration ?? ''}
 							onValueChange={value => handleSelectChange('duration', value)}
 						>
 							<SelectTrigger className="border-[#333333] bg-[#151515] text-white">
 								<SelectValue placeholder="Select duration" />
 							</SelectTrigger>
 							<SelectContent className="border-[#333333] bg-[#151515] text-white">
-								{durationOptions.map(option => (
+								{courseDurationSchema.options.map(option => (
 									<SelectItem key={option} value={option}>
 										{option}
 									</SelectItem>

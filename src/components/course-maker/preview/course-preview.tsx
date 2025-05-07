@@ -16,15 +16,15 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import type { Course } from '@/db/schema/course';
-import type { CourseLesson } from '@/db/schema/course-lesson';
-import type { CourseLessonQuestion } from '@/db/schema/course-lesson-question';
+import type { NewCourse } from '@/db/schema/course';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
 type CoursePreviewProps = {
-	course: Course;
-	courseLessons: CourseLesson[];
-	courseLessonQuestions: CourseLessonQuestion[];
-	prerequisiteCourses: { id: number; title: string }[];
+	course: NewCourse;
+	courseLessons: NewCourseLesson[];
+	courseLessonQuestions: NewCourseLessonQuestion[];
+	prerequisiteCourses: { id: string; title: string }[];
 };
 
 export const CoursePreview = ({
@@ -34,7 +34,7 @@ export const CoursePreview = ({
 	prerequisiteCourses
 }: CoursePreviewProps) => {
 	// Get questions for a specific lesson
-	const getQuestionsForLesson = (lessonId: number) =>
+	const getQuestionsForLesson = (lessonId: string) =>
 		courseLessonQuestions.filter(question => question.lessonId === lessonId);
 
 	return (
@@ -50,11 +50,11 @@ export const CoursePreview = ({
 					{course.difficulty && (
 						<Badge
 							className={` ${
-								course.difficulty === 'Beginner'
+								course.difficulty === 'Silver'
 									? 'bg-green-500/10 text-green-500'
-									: course.difficulty === 'Intermediate'
+									: course.difficulty === 'Gold'
 										? 'bg-blue-500/10 text-blue-500'
-										: course.difficulty === 'Advanced'
+										: course.difficulty === 'Legendary Eagle'
 											? 'bg-orange-500/10 text-orange-500'
 											: 'bg-purple-500/10 text-purple-500'
 							} `}
@@ -69,7 +69,7 @@ export const CoursePreview = ({
 					<Image
 						src={
 							course.image ||
-							'/https://placehold.co/600x400.png?text=Course+Image'
+							'https://placehold.co/600x400.png?text=Course+Image'
 						}
 						alt="Course preview"
 						fill
@@ -116,11 +116,11 @@ export const CoursePreview = ({
 
 					<Accordion type="single" collapsible className="w-full">
 						{courseLessons.map((lesson, lessonIndex) => {
-							const lessonQuestions = getQuestionsForLesson(lesson.id);
+							const lessonQuestions = getQuestionsForLesson(lesson.id ?? -1);
 							return (
 								<AccordionItem
 									key={lesson.id}
-									value={lesson.id.toString()}
+									value={lesson.id?.toString() ?? ''}
 									className="border-[#2A2A2A]"
 								>
 									<AccordionTrigger className="py-4 text-white hover:text-white hover:no-underline">

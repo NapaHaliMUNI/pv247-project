@@ -6,14 +6,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import type { Course } from '@/db/schema/course';
-import type { CourseLesson } from '@/db/schema/course-lesson';
-import type { CourseLessonQuestion } from '@/db/schema/course-lesson-question';
+import type { NewCourse } from '@/db/schema/course';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
 type CourseSummaryProps = {
-	course: Course;
-	courseLessons: CourseLesson[];
-	courseLessonQuestions: CourseLessonQuestion[];
+	course: NewCourse;
+	courseLessons: NewCourseLesson[];
+	courseLessonQuestions: NewCourseLessonQuestion[];
 	saveCourse: () => void;
 };
 
@@ -34,7 +34,7 @@ export const CourseSummary = ({
 					<div className="mt-1 flex items-center">
 						<Clock className="mr-2 h-4 w-4 text-[#FF5500]" />
 						<div className="font-medium text-white">
-							{course.duration || 'Not set'}
+							{course.duration ?? 'Not set'}
 						</div>
 					</div>
 				</div>
@@ -44,7 +44,7 @@ export const CourseSummary = ({
 					<div className="mt-1 flex items-center">
 						<BarChart2 className="mr-2 h-4 w-4 text-[#FF5500]" />
 						<div className="font-medium text-white">
-							{course.difficulty || 'Not set'}
+							{course.difficulty ?? 'Not set'}
 						</div>
 					</div>
 				</div>

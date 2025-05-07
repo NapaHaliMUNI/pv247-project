@@ -3,6 +3,7 @@
 import type React from 'react';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,20 +16,22 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import type { Course } from '@/db/schema/course';
-import type { CourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourse } from '@/db/schema/course';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
 
 type LessonFormProps = {
-	course: Course;
-	courseLessonsState: [CourseLesson[], (lessons: CourseLesson[]) => void];
+	course: NewCourse;
+	courseLessonsState: [NewCourseLesson[], (lessons: NewCourseLesson[]) => void];
 };
 
 export const LessonForm = ({
 	course,
 	courseLessonsState: [courseLessons, setCourseLessons]
 }: LessonFormProps) => {
-	const [currentLesson, setCurrentLesson] = useState<CourseLesson | null>(null);
-	const [editingLessonId, setEditingLessonId] = useState<number | null>(null);
+	const [currentLesson, setCurrentLesson] = useState<NewCourseLesson | null>(
+		null
+	);
+	const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
 
 	// Handle lesson change
 	const handleLessonChange = (
@@ -38,16 +41,11 @@ export const LessonForm = ({
 		if (!currentLesson) {
 			// Initialize with defaults for required properties
 			setCurrentLesson({
-				id: -1,
+				id: uuidv4(),
 				title: name === 'title' ? value : '',
-				createdAt: null,
-				createdBy: -1,
-				updatedAt: null,
-				updatedBy: -1,
 				courseId: course.id,
 				lessonOrder: courseLessons.length,
-				content: name === 'content' ? value : '',
-				videoUrl: ''
+				content: name === 'content' ? value : ''
 			});
 		} else {
 			setCurrentLesson({
@@ -63,7 +61,7 @@ export const LessonForm = ({
 
 		const newLesson = {
 			...currentLesson,
-			id: editingLessonId ?? -1,
+			id: editingLessonId ?? uuidv4(),
 			order: editingLessonId
 				? (courseLessons.find(l => l.id === editingLessonId)?.lessonOrder ??
 					courseLessons.length)
@@ -76,7 +74,6 @@ export const LessonForm = ({
 				)
 			: [...courseLessons, newLesson];
 		setCourseLessons(updatedLessons);
-
 		setCurrentLesson(null);
 		setEditingLessonId(null);
 	};

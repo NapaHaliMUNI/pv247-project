@@ -17,14 +17,14 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import type { CourseLesson } from '@/db/schema/course-lesson';
-import type { CourseLessonQuestion } from '@/db/schema/course-lesson-question';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
 type QuestionListProps = {
-	courseLessons: CourseLesson[];
+	courseLessons: NewCourseLesson[];
 	courseLessonQuestionsState: [
-		CourseLessonQuestion[],
-		(questions: CourseLessonQuestion[]) => void
+		NewCourseLessonQuestion[],
+		(questions: NewCourseLessonQuestion[]) => void
 	];
 };
 
@@ -33,11 +33,11 @@ export const QuestionList = ({
 	courseLessonQuestionsState: [courseLessonQuestions, setCourseLessonQuestions]
 }: QuestionListProps) => {
 	// Get questions for a specific lesson
-	const getQuestionsForLesson = (lessonId: number) =>
+	const getQuestionsForLesson = (lessonId: string) =>
 		courseLessonQuestions.filter(question => question.lessonId === lessonId);
 
 	// Edit question
-	const editQuestion = (id: number) => {
+	const editQuestion = (id: string) => {
 		// TODO: Implement edit question logic
 		const question = courseLessonQuestions.find(q => q.id === id);
 		if (!question) return;
@@ -45,7 +45,7 @@ export const QuestionList = ({
 	};
 
 	// Delete question
-	const deleteQuestion = (id: number) => {
+	const deleteQuestion = (id: string) => {
 		setCourseLessonQuestions(
 			courseLessonQuestions.filter(question => question.id !== id)
 		);
@@ -65,11 +65,11 @@ export const QuestionList = ({
 				{courseLessons.length > 0 ? (
 					<Accordion type="multiple" className="w-full">
 						{courseLessons.map(lesson => {
-							const lessonQuestions = getQuestionsForLesson(lesson.id);
+							const lessonQuestions = getQuestionsForLesson(lesson.id ?? -1);
 							return (
 								<AccordionItem
 									key={lesson.id}
-									value={lesson.id.toString()}
+									value={lesson.id?.toString() ?? ''}
 									className="border-[#2A2A2A]"
 								>
 									<AccordionTrigger className="py-3 text-white hover:text-white hover:no-underline">
@@ -114,7 +114,10 @@ export const QuestionList = ({
 																variant="ghost"
 																size="icon"
 																className="h-8 w-8 text-[#ABABAB] hover:bg-[#1F1F1F] hover:text-white"
-																onClick={() => editQuestion(question.id)}
+																onClick={() =>
+																	question.id !== undefined &&
+																	editQuestion(question.id)
+																}
 															>
 																<Edit className="h-4 w-4" />
 															</Button>
@@ -122,7 +125,10 @@ export const QuestionList = ({
 																variant="ghost"
 																size="icon"
 																className="h-8 w-8 text-[#ABABAB] hover:bg-[#1F1F1F] hover:text-white"
-																onClick={() => deleteQuestion(question.id)}
+																onClick={() =>
+																	question.id !== undefined &&
+																	deleteQuestion(question.id)
+																}
 															>
 																<Trash2 className="h-4 w-4" />
 															</Button>

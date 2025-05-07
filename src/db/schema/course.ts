@@ -11,35 +11,44 @@ import { courseLesson } from './course-lesson';
 import { user } from './user';
 
 export const courseDifficultySchema = z.enum([
-	'Beginner',
-	'Intermediate',
-	'Advanced',
-	'Expert',
-	'Master'
+	'Silver',
+	'Gold',
+	'Legendary Eagle',
+	'The Global Elite'
 ]);
 export const courseDurationSchema = z.enum([
-	'Short (5-15 minutes)',
-	'Medium (15-30 minutes)',
-	'Long (30+ minutes)'
+	'Short (10-30 minutes)',
+	'Medium (30-60 minutes)',
+	'Long (60+ minutes)'
+]);
+export const courseCategorySchema = z.enum([
+	'Fundamentals',
+	'Weapon Skills',
+	'Movement',
+	'Maps',
+	'Utility',
+	'Game Sense'
 ]);
 
 // Create the table in a function
 export const course = sqliteTable(
 	'course',
 	{
-		id: integer('id').primaryKey({ autoIncrement: true }),
+		id: text('id').primaryKey(),
 		title: text('title').notNull(),
 		image: text('image').notNull(),
 		shortDescription: text('short_description').notNull(),
 		longDescription: text('long_description').notNull(),
-		category: text('category').notNull(),
+		category: text('category', {
+			enum: courseCategorySchema.options
+		}),
 		difficulty: text('difficulty', {
 			enum: courseDifficultySchema.options
-		}).notNull(),
+		}),
 		duration: text('duration', {
 			enum: courseDurationSchema.options
-		}).notNull(),
-		prerequisiteId: integer('prerequisite_id'),
+		}),
+		prerequisiteId: text('prerequisite_id'),
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 		createdBy: integer('created_by'),
 		updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),

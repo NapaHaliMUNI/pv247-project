@@ -3,17 +3,17 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import type { CourseLesson } from '@/db/schema/course-lesson';
-import type { CourseLessonQuestion } from '@/db/schema/course-lesson-question';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
 import { QuestionList } from '../lists/question-list';
 import { QuestionForm } from '../forms/question-form';
 
 type CourseQuestionsTabProps = {
-	courseLessons: CourseLesson[];
+	courseLessons: NewCourseLesson[];
 	courseLessonQuestionsState: [
-		CourseLessonQuestion[],
-		(questions: CourseLessonQuestion[]) => void
+		NewCourseLessonQuestion[],
+		(questions: NewCourseLessonQuestion[]) => void
 	];
 	nextStep: () => void;
 	prevStep: () => void;

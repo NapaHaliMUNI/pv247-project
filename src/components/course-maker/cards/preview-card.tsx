@@ -10,10 +10,10 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import type { Course } from '@/db/schema/course';
+import type { NewCourse } from '@/db/schema/course';
 
 type CoursePreviewCardProps = {
-	course: Course;
+	course: NewCourse;
 };
 
 export const CoursePreviewCard = ({ course }: CoursePreviewCardProps) => (
@@ -40,11 +40,11 @@ export const CoursePreviewCard = ({ course }: CoursePreviewCardProps) => (
 						<div className="absolute top-3 left-3">
 							<Badge
 								className={` ${
-									course.difficulty === 'Beginner'
+									course.difficulty === 'Silver'
 										? 'bg-green-500/10 text-green-500'
-										: course.difficulty === 'Intermediate'
+										: course.difficulty === 'Gold'
 											? 'bg-blue-500/10 text-blue-500'
-											: course.difficulty === 'Advanced'
+											: course.difficulty === 'Legendary Eagle'
 												? 'bg-orange-500/10 text-orange-500'
 												: 'bg-purple-500/10 text-purple-500'
 								} `}
@@ -64,7 +64,7 @@ export const CoursePreviewCard = ({ course }: CoursePreviewCardProps) => (
 							'Course short description will appear here'}
 					</p>
 
-					{(course.duration || course.category) && (
+					{(course.duration ?? course.category) && (
 						<div className="flex items-center justify-between border-t border-[#2A2A2A] pt-4">
 							{course.duration && (
 								<div className="flex items-center gap-1">

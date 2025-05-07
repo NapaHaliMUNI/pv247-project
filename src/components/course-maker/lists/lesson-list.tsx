@@ -10,11 +10,11 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import type { CourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
 
 type LessonListProps = {
-	courseLessons: CourseLesson[];
-	setCourseLessons: (lessons: CourseLesson[]) => void;
+	courseLessons: NewCourseLesson[];
+	setCourseLessons: (lessons: NewCourseLesson[]) => void;
 };
 
 export const LessonList = ({
@@ -22,7 +22,7 @@ export const LessonList = ({
 	setCourseLessons
 }: LessonListProps) => {
 	// Edit lesson
-	const editLesson = (id: number) => {
+	const editLesson = (id: string) => {
 		const lesson = courseLessons.find(l => l.id === id);
 		if (!lesson) return;
 
@@ -32,7 +32,7 @@ export const LessonList = ({
 	};
 
 	// Delete lesson
-	const deleteLesson = (id: number) => {
+	const deleteLesson = (id: string) => {
 		setCourseLessons(courseLessons.filter(lesson => lesson.id !== id));
 	};
 
@@ -67,7 +67,9 @@ export const LessonList = ({
 										variant="ghost"
 										size="icon"
 										className="h-8 w-8 text-[#ABABAB] hover:bg-[#1F1F1F] hover:text-white"
-										onClick={() => editLesson(lesson.id)}
+										onClick={() =>
+											lesson.id !== undefined && editLesson(lesson.id)
+										}
 									>
 										<Edit className="h-4 w-4" />
 									</Button>
@@ -75,7 +77,9 @@ export const LessonList = ({
 										variant="ghost"
 										size="icon"
 										className="h-8 w-8 text-[#ABABAB] hover:bg-[#1F1F1F] hover:text-white"
-										onClick={() => deleteLesson(lesson.id)}
+										onClick={() =>
+											lesson.id !== undefined && deleteLesson(lesson.id)
+										}
 									>
 										<Trash2 className="h-4 w-4" />
 									</Button>

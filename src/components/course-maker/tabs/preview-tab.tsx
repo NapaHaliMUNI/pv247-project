@@ -3,20 +3,20 @@
 import { ChevronLeft } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import type { Course } from '@/db/schema/course';
-import type { CourseLesson } from '@/db/schema/course-lesson';
-import type { CourseLessonQuestion } from '@/db/schema/course-lesson-question';
+import type { NewCourse } from '@/db/schema/course';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
 import { CoursePreview } from '../preview/course-preview';
 import { CourseSummary } from '../preview/course-summary';
 
 type CoursePreviewTabProps = {
-	course: Course;
-	courseLessons: CourseLesson[];
-	courseLessonQuestions: CourseLessonQuestion[];
+	course: NewCourse;
+	courseLessons: NewCourseLesson[];
+	courseLessonQuestions: NewCourseLessonQuestion[];
 	prevStep: () => void;
 	saveCourse: () => void;
-	prerequisiteCourses: { id: number; title: string }[];
+	prerequisiteCourses: { id: string; title: string }[];
 };
 
 export const CoursePreviewTab = ({

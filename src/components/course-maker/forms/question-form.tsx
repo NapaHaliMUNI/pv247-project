@@ -3,6 +3,7 @@
 import type React from 'react';
 import { useState } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,17 +25,17 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import type { CourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
 import type {
-	CourseLessonQuestion,
+	NewCourseLessonQuestion,
 	CourseQuestionOption
 } from '@/db/schema/course-lesson-question';
 
 type QuestionFormProps = {
-	courseLessons: CourseLesson[];
+	courseLessons: NewCourseLesson[];
 	courseLessonQuestionsState: [
-		CourseLessonQuestion[],
-		(questions: CourseLessonQuestion[]) => void
+		NewCourseLessonQuestion[],
+		(questions: NewCourseLessonQuestion[]) => void
 	];
 };
 
@@ -43,8 +44,8 @@ export const QuestionForm = ({
 	courseLessonQuestionsState: [courseLessonQuestions, setCourseLessonQuestions]
 }: QuestionFormProps) => {
 	const [currentQuestion, setCurrentQuestion] =
-		useState<CourseLessonQuestion | null>(null);
-	const [editingQuestionId, setEditingQuestionId] = useState<number | null>(
+		useState<NewCourseLessonQuestion | null>(null);
+	const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
 		null
 	);
 
@@ -56,16 +57,14 @@ export const QuestionForm = ({
 		if (!currentQuestion) {
 			// Initialize with defaults for required properties
 			setCurrentQuestion({
-				id: -1,
+				id: uuidv4(),
 				title: name === 'title' ? value : '',
-				lessonId: -1,
 				type: 'radio',
-				options: [],
+				options: [
+					{ id: 1, text: '', isCorrect: false },
+					{ id: 2, text: '', isCorrect: false }
+				],
 				explanation: '',
-				createdAt: null,
-				createdBy: -1,
-				updatedAt: null,
-				updatedBy: -1,
 				questionOrder: courseLessonQuestions.length
 			});
 		} else {
@@ -77,13 +76,12 @@ export const QuestionForm = ({
 	};
 
 	// Handle question type change
-	const handleQuestionTypeChange = (type: CourseLessonQuestion['type']) => {
+	const handleQuestionTypeChange = (type: NewCourseLessonQuestion['type']) => {
 		setCurrentQuestion(current => {
 			if (!current) {
 				return {
-					id: -1,
+					id: uuidv4(),
 					title: '',
-					lessonId: -1,
 					type,
 					options:
 						type === 'true-false'
@@ -93,10 +91,6 @@ export const QuestionForm = ({
 								]
 							: [],
 					explanation: '',
-					createdAt: null,
-					createdBy: -1,
-					updatedAt: null,
-					updatedBy: -1,
 					questionOrder: courseLessonQuestions.length
 				};
 			}
@@ -194,9 +188,9 @@ export const QuestionForm = ({
 		}
 
 		// Create new question object
-		const newQuestion: CourseLessonQuestion = {
+		const newQuestion: NewCourseLessonQuestion = {
 			...currentQuestion,
-			id: editingQuestionId ?? -1,
+			id: editingQuestionId ?? uuidv4(),
 			lessonId: currentQuestion.lessonId,
 			questionOrder: editingQuestionId
 				? (courseLessonQuestions.find(q => q.id === editingQuestionId)
@@ -233,25 +227,21 @@ export const QuestionForm = ({
 				<div className="space-y-2">
 					<Label htmlFor="lessonSelect">Select Lesson</Label>
 					<Select
-						value={currentQuestion?.lessonId.toString()}
+						value={currentQuestion?.lessonId?.toString()}
 						onValueChange={value =>
 							setCurrentQuestion(current => {
 								if (!current) {
 									return {
-										id: -1,
+										id: uuidv4(),
 										title: '',
-										lessonId: +value,
+										lessonId: value,
 										type: 'radio',
 										options: [],
 										explanation: '',
-										createdAt: null,
-										createdBy: -1,
-										updatedAt: null,
-										updatedBy: -1,
 										questionOrder: courseLessonQuestions.length
 									};
 								}
-								return { ...current, lessonId: +value };
+								return { ...current, lessonId: value };
 							})
 						}
 					>
@@ -260,7 +250,7 @@ export const QuestionForm = ({
 						</SelectTrigger>
 						<SelectContent className="border-[#333333] bg-[#151515] text-white">
 							{courseLessons.map(lesson => (
-								<SelectItem key={lesson.id} value={lesson.id.toString()}>
+								<SelectItem key={lesson.id} value={lesson.id?.toString() ?? ''}>
 									{lesson.title}
 								</SelectItem>
 							))}
@@ -409,7 +399,7 @@ export const QuestionForm = ({
 						name="explanation"
 						placeholder="Provide an explanation for the correct answer"
 						className="min-h-[100px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
-						value={currentQuestion?.explanation}
+						value={currentQuestion?.explanation ?? ''}
 						onChange={handleQuestionChange}
 					/>
 				</div>

@@ -3,15 +3,15 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import type { Course } from '@/db/schema/course';
-import type { CourseLesson } from '@/db/schema/course-lesson';
+import type { NewCourse } from '@/db/schema/course';
+import type { NewCourseLesson } from '@/db/schema/course-lesson';
 
 import { LessonForm } from '../forms/lesson-form';
 import { LessonList } from '../lists/lesson-list';
 
 type CourseLessonsTabProps = {
-	course: Course;
-	courseLessonsState: [CourseLesson[], (lessons: CourseLesson[]) => void];
+	course: NewCourse;
+	courseLessonsState: [NewCourseLesson[], (lessons: NewCourseLesson[]) => void];
 	nextStep: () => void;
 	prevStep: () => void;
 };

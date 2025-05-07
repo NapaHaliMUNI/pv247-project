@@ -18,15 +18,15 @@ export const courseQuestionOption = z.object({
 export type CourseQuestionOption = z.infer<typeof courseQuestionOption>;
 
 export const courseLessonQuestion = sqliteTable('course_lesson_question', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
-	lessonId: integer('lesson_id').notNull(),
+	id: text('id').primaryKey(),
+	lessonId: text('lesson_id'),
 	questionOrder: integer('question_order').notNull(), // Order within the lesson
 	type: text('type', { enum: questionTypeSchema.options }).notNull(),
 	title: text('title').notNull(),
 	options: text('options', { mode: 'json' })
 		.$type<CourseQuestionOption[]>()
 		.notNull(), // JSON string with question details
-	explanation: text('explanation').notNull(),
+	explanation: text('explanation'),
 	createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
 	createdBy: integer('created_by'),
 	updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
