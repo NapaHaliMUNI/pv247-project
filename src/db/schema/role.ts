@@ -9,9 +9,9 @@ export const role = sqliteTable('role', {
 	prefix: integer('prefix').notNull().default(1),
 	priority: integer('priority').notNull(),
 	createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
-	createdBy: integer('created_by').notNull(),
+	createdBy: integer('created_by'),
 	updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
-	updatedBy: integer('updated_by').notNull()
+	updatedBy: integer('updated_by')
 });
 
 export const roleRelations = relations(role, ({ one }) => ({

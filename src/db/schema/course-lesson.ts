@@ -20,9 +20,9 @@ export const courseLesson = sqliteTable(
 		content: text('content').notNull(),
 		videoUrl: text('video_url').notNull(),
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
-		createdBy: integer('created_by').notNull(),
+		createdBy: integer('created_by'),
 		updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
-		updatedBy: integer('updated_by').notNull()
+		updatedBy: integer('updated_by')
 	},
 	table => [
 		uniqueIndex('unique_lesson_order_per_course').on(

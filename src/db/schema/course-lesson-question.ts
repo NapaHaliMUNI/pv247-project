@@ -28,9 +28,9 @@ export const courseLessonQuestion = sqliteTable('course_lesson_question', {
 		.notNull(), // JSON string with question details
 	explanation: text('explanation').notNull(),
 	createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
-	createdBy: integer('created_by').notNull(),
+	createdBy: integer('created_by'),
 	updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
-	updatedBy: integer('updated_by').notNull()
+	updatedBy: integer('updated_by')
 });
 
 export const courseLessonQuestionRelations = relations(

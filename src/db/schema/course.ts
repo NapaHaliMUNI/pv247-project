@@ -41,9 +41,9 @@ export const course = sqliteTable(
 		}).notNull(),
 		prerequisiteId: integer('prerequisite_id'),
 		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
-		createdBy: integer('created_by').notNull(),
+		createdBy: integer('created_by'),
 		updatedAt: text('updated_at').default(sql`(CURRENT_DATE)`),
-		updatedBy: integer('updated_by').notNull()
+		updatedBy: integer('updated_by')
 	},
 	table => [
 		foreignKey({

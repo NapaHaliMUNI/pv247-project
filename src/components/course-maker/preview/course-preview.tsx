@@ -67,7 +67,10 @@ export const CoursePreview = ({
 			<CardContent>
 				<div className="relative mb-6 aspect-video overflow-hidden rounded-lg">
 					<Image
-						src={course.image || '/placeholder.svg'}
+						src={
+							course.image ||
+							'/https://placehold.co/600x400.png?text=Course+Image'
+						}
 						alt="Course preview"
 						fill
 						className="object-cover"
