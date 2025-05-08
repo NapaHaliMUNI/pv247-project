@@ -177,8 +177,8 @@ export const CourseDetailsForm = ({
 						<MultiSelect
 							className="border-[#333333] bg-[#151515] text-white"
 							options={prerequisiteCourses}
-							onValueChange={setSelectedPrerequisiteCourses}
-							value={selectedPrerequisiteCourses}
+							selectedValues={selectedPrerequisiteCourses}
+							setSelectedValues={setSelectedPrerequisiteCourses}
 							placeholder="Select prerequisite courses"
 						/>
 					</div>

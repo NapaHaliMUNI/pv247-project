@@ -5,7 +5,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { useFiltersContext } from '@/store/filters-context';
+import { useFiltersContext } from '@/store/courses/filters-context';
 
 const CategoryFilter = ({ categories }: { categories: string[] }) => {
 	const { selectedCategory, setSelectedCategory } = useFiltersContext();

@@ -1,3 +1,5 @@
+// TODO: dont forget to force dynamic basically everywhere
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -29,7 +31,9 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import DifficultyFilter from '@/components/courses/filters/difficulty-filter';
 import CategoryFilter from '@/components/courses/filters/category-filter';
-import { useFiltersContext } from '@/store/filters-context';
+import { useFiltersContext } from '@/store/courses/filters-context';
+import Searchbar from '@/components/courses/searchbar/searchbar';
+import Sort from '@/components/courses/sort/sort';
 
 // Course type definition
 type Course = {
@@ -230,25 +234,20 @@ const categories = [
 	'Strategy',
 	'Advanced Skills'
 ];
-const sortOptions = [
-	'Most Popular',
-	'Newest',
-	'Highest Rated',
-	'Duration (Shortest)',
-	'Duration (Longest)'
-];
 
 const CoursesPage = () => {
 	const [courses, setCourses] = useState<Course[]>(coursesData);
-	const [searchQuery, setSearchQuery] = useState('');
 	const {
-		selectedDifficulty,
-		setSelectedDifficulty,
+		searchQuery,
+		setSearchQuery,
+		selectedDifficulties,
+		setSelectedDifficulties,
 		selectedCategory,
-		setSelectedCategory
+		setSelectedCategory,
+		selectedSort,
+		setSelectedSort,
+		resetFilters
 	} = useFiltersContext();
-	const [selectedSort, setSelectedSort] = useState('Most Popular');
-	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
 	// All unique tags from courses
 	const allTags = Array.from(
@@ -277,23 +276,16 @@ const CoursesPage = () => {
 		}
 
 		// Filter by difficulty
-		if (selectedDifficulty !== 'All') {
-			filteredCourses = filteredCourses.filter(
-				course => course.difficulty === selectedDifficulty
-			);
-		}
+		// if (selectedDifficulties !== 'All') {
+		// 	filteredCourses = filteredCourses.filter(
+		// 		course => course.difficulty === selectedDifficulties
+		// 	);
+		// }
 
 		// Filter by category
 		if (selectedCategory !== 'All') {
 			filteredCourses = filteredCourses.filter(
 				course => course.category === selectedCategory
-			);
-		}
-
-		// Filter by tags
-		if (selectedTags.length > 0) {
-			filteredCourses = filteredCourses.filter(course =>
-				selectedTags.some(tag => course.tags.includes(tag))
 			);
 		}
 
@@ -323,31 +315,7 @@ const CoursesPage = () => {
 		}
 
 		setCourses(filteredCourses);
-	}, [
-		searchQuery,
-		selectedDifficulty,
-		selectedCategory,
-		selectedSort,
-		selectedTags
-	]);
-
-	// Toggle tag selection
-	const toggleTag = (tag: string) => {
-		if (selectedTags.includes(tag)) {
-			setSelectedTags(selectedTags.filter(t => t !== tag));
-		} else {
-			setSelectedTags([...selectedTags, tag]);
-		}
-	};
-
-	// Reset all filters
-	const resetFilters = () => {
-		setSearchQuery('');
-		setSelectedDifficulty('All');
-		setSelectedCategory('All');
-		setSelectedSort('Most Popular');
-		setSelectedTags([]);
-	};
+	}, [searchQuery, selectedDifficulties, selectedCategory, selectedSort]);
 
 	// Get difficulty badge color
 	const getDifficultyColor = (difficulty: string) => {
@@ -413,27 +381,7 @@ const CoursesPage = () => {
 										<div className="space-y-6">
 											<DifficultyFilter difficulties={difficulties} />
 											<CategoryFilter categories={categories} />
-
-											{/* Tags Filter */}
-											<div>
-												<h4 className="mb-2 text-sm font-medium">Tags</h4>
-												<div className="flex flex-wrap gap-2">
-													{allTags.map(tag => (
-														<Badge
-															key={tag}
-															variant="outline"
-															className={`cursor-pointer ${
-																selectedTags.includes(tag)
-																	? 'border-[#FF5500]/50 bg-[#FF5500]/20 text-[#FF5500]'
-																	: 'border-[#333333] bg-transparent text-[#ABABAB] hover:bg-[#1F1F1F]'
-															}`}
-															onClick={() => toggleTag(tag)}
-														>
-															{tag}
-														</Badge>
-													))}
-												</div>
-											</div>
+											{/*TODO add duration filter*/}
 
 											{/* Reset Filters */}
 											<Button
@@ -449,9 +397,8 @@ const CoursesPage = () => {
 							</Sheet>
 						</div>
 
-						{/*			/!* Desktop Sidebar Filters *!/*/}
 						<div className="hidden w-full max-w-[280px] shrink-0 lg:block">
-							<div className="sticky top-4 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-6">
+							<div className="sticky top-[calc(var(--navigation-height)+32px)] rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-6">
 								<div className="mb-6 flex items-center justify-between">
 									<h3 className="text-lg font-semibold">Filters</h3>
 									<Button
@@ -464,66 +411,9 @@ const CoursesPage = () => {
 								</div>
 
 								<div className="space-y-6">
-									{/* Difficulty Filter */}
-									<div>
-										<h4 className="mb-2 text-sm font-medium">Difficulty</h4>
-										<Select
-											value={selectedDifficulty}
-											onValueChange={setSelectedDifficulty}
-										>
-											<SelectTrigger className="border-[#333333] bg-[#151515] text-white">
-												<SelectValue placeholder="Select difficulty" />
-											</SelectTrigger>
-											<SelectContent className="border-[#333333] bg-[#151515] text-white">
-												{difficulties.map(difficulty => (
-													<SelectItem key={difficulty} value={difficulty}>
-														{difficulty}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</div>
-
-									{/* Category Filter */}
-									<div>
-										<h4 className="mb-2 text-sm font-medium">Category</h4>
-										<Select
-											value={selectedCategory}
-											onValueChange={setSelectedCategory}
-										>
-											<SelectTrigger className="border-[#333333] bg-[#151515] text-white">
-												<SelectValue placeholder="Select category" />
-											</SelectTrigger>
-											<SelectContent className="border-[#333333] bg-[#151515] text-white">
-												{categories.map(category => (
-													<SelectItem key={category} value={category}>
-														{category}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</div>
-
-									{/* Tags Filter */}
-									<div>
-										<h4 className="mb-2 text-sm font-medium">Tags</h4>
-										<div className="flex flex-wrap gap-2">
-											{allTags.map(tag => (
-												<Badge
-													key={tag}
-													variant="outline"
-													className={`cursor-pointer ${
-														selectedTags.includes(tag)
-															? 'border-[#FF5500]/50 bg-[#FF5500]/20 text-[#FF5500]'
-															: 'border-[#333333] bg-transparent text-[#ABABAB] hover:bg-[#1F1F1F]'
-													}`}
-													onClick={() => toggleTag(tag)}
-												>
-													{tag}
-												</Badge>
-											))}
-										</div>
-									</div>
+									<DifficultyFilter difficulties={difficulties} />
+									<CategoryFilter categories={categories} />
+									{/*TODO add duration filter*/}
 								</div>
 							</div>
 						</div>
@@ -532,28 +422,8 @@ const CoursesPage = () => {
 						<div className="w-full">
 							{/* Search and Sort */}
 							<div className="mb-8 flex flex-col gap-4 sm:flex-row">
-								<div className="relative flex-grow">
-									<Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#ABABAB]" />
-									<Input
-										type="text"
-										placeholder="Search courses..."
-										className="border-[#333333] bg-[#1A1A1A] pl-10 text-white focus-visible:ring-[#FF5500]"
-										value={searchQuery}
-										onChange={e => setSearchQuery(e.target.value)}
-									/>
-								</div>
-								<Select value={selectedSort} onValueChange={setSelectedSort}>
-									<SelectTrigger className="w-full border-[#333333] bg-[#1A1A1A] text-white sm:w-[200px]">
-										<SelectValue placeholder="Sort by" />
-									</SelectTrigger>
-									<SelectContent className="border-[#333333] bg-[#151515] text-white">
-										{sortOptions.map(option => (
-											<SelectItem key={option} value={option}>
-												{option}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
+								<Searchbar />
+								<Sort />
 							</div>
 
 							{/* Results Count */}

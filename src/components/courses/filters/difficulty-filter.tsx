@@ -1,3 +1,5 @@
+import type React from 'react';
+
 import {
 	Select,
 	SelectContent,
@@ -5,25 +7,37 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { useFiltersContext } from '@/store/filters-context';
+import { useFiltersContext } from '@/store/courses/filters-context';
+import { MultiSelect } from '@/components/ui/multi-select';
+import {
+	type CourseDifficulty,
+	courseDifficultySchema
+} from '@/db/schema/course';
+
+const courseDifficultyOptions = courseDifficultySchema.options.map(
+	difficulty => ({
+		label: difficulty,
+		value: difficulty
+		// icon can be added here if needed
+	})
+);
 
 const DifficultyFilter = ({ difficulties }: { difficulties: string[] }) => {
-	const { selectedDifficulty, setSelectedDifficulty } = useFiltersContext();
+	const { selectedDifficulties, setSelectedDifficulties } = useFiltersContext();
+
 	return (
 		<div>
 			<h4 className="mb-2 text-sm font-medium">Difficulty</h4>
-			<Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-				<SelectTrigger className="border-[#333333] bg-[#151515] text-white">
-					<SelectValue placeholder="Select difficulty" />
-				</SelectTrigger>
-				<SelectContent className="border-[#333333] bg-[#151515] text-white">
-					{difficulties.map(difficulty => (
-						<SelectItem key={difficulty} value={difficulty}>
-							{difficulty}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
+			<MultiSelect
+				className="border-[#333333] bg-[#151515] text-white"
+				options={courseDifficultyOptions}
+				selectedValues={selectedDifficulties}
+				setSelectedValues={values =>
+					setSelectedDifficulties(values as CourseDifficulty[])
+				}
+				defaultValue={selectedDifficulties}
+				placeholder="Select difficulties"
+			/>
 		</div>
 	);
 };

@@ -13,6 +13,8 @@ export const courseDifficultySchema = z.enum([
 	'Legendary Eagle',
 	'The Global Elite'
 ]);
+export type CourseDifficulty = z.infer<typeof courseDifficultySchema>;
+
 export const courseDurationSchema = z.enum([
 	'Short (10-30 minutes)',
 	'Medium (30-60 minutes)',

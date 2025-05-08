@@ -71,11 +71,15 @@ type MultiSelectProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
 			icon?: React.ComponentType<{ className?: string }>;
 		}[];
 
+		selectedValues: string[];
+
+		setSelectedValues: (value: string[]) => void;
+
 		/**
 		 * Callback function triggered when the selected values change.
 		 * Receives an array of the new selected values.
 		 */
-		onValueChange: (value: string[]) => void;
+		onValueChange?: (value: string[]) => void;
 
 		/** The default selected values when the component mounts. */
 		defaultValue?: string[];
@@ -125,6 +129,8 @@ export const MultiSelect = React.forwardRef<
 	(
 		{
 			options,
+			selectedValues,
+			setSelectedValues,
 			onValueChange,
 			variant,
 			defaultValue = [],
@@ -138,8 +144,8 @@ export const MultiSelect = React.forwardRef<
 		},
 		ref
 	) => {
-		const [selectedValues, setSelectedValues] =
-			React.useState<string[]>(defaultValue);
+		// const [selectedValues, setSelectedValues] =
+		// 	React.useState<string[]>(defaultValue);
 		const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
 		const [isAnimating, setIsAnimating] = React.useState(false);
 
@@ -152,7 +158,9 @@ export const MultiSelect = React.forwardRef<
 				const newSelectedValues = [...selectedValues];
 				newSelectedValues.pop();
 				setSelectedValues(newSelectedValues);
-				onValueChange(newSelectedValues);
+				if (onValueChange) {
+					onValueChange(newSelectedValues);
+				}
 			}
 		};
 
@@ -161,12 +169,16 @@ export const MultiSelect = React.forwardRef<
 				? selectedValues.filter(value => value !== option)
 				: [...selectedValues, option];
 			setSelectedValues(newSelectedValues);
-			onValueChange(newSelectedValues);
+			if (onValueChange) {
+				onValueChange(newSelectedValues);
+			}
 		};
 
 		const handleClear = () => {
 			setSelectedValues([]);
-			onValueChange([]);
+			if (onValueChange) {
+				onValueChange([]);
+			}
 		};
 
 		const handleTogglePopover = () => {
@@ -176,7 +188,9 @@ export const MultiSelect = React.forwardRef<
 		const clearExtraOptions = () => {
 			const newSelectedValues = selectedValues.slice(0, maxCount);
 			setSelectedValues(newSelectedValues);
-			onValueChange(newSelectedValues);
+			if (onValueChange) {
+				onValueChange(newSelectedValues);
+			}
 		};
 
 		const toggleAll = () => {
@@ -185,7 +199,9 @@ export const MultiSelect = React.forwardRef<
 			} else {
 				const allValues = options.map(option => option.value);
 				setSelectedValues(allValues);
-				onValueChange(allValues);
+				if (onValueChange) {
+					onValueChange(allValues);
+				}
 			}
 		};
 
