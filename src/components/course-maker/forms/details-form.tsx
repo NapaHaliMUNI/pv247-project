@@ -1,6 +1,7 @@
 'use client';
 
 import type React from 'react';
+import { useState } from 'react';
 
 import {
 	Card,
@@ -25,13 +26,14 @@ import {
 	courseDifficultySchema,
 	courseDurationSchema
 } from '@/db/schema/course';
+import { MultiSelect } from '@/components/ui/multi-select';
 
 // Sample prerequisite courses
 const prerequisiteCourses = [
-	{ id: '1', title: 'CS2 Fundamentals: From Beginner to Competitive' },
-	{ id: '2', title: 'Advanced Weapon Mastery: Rifles' },
-	{ id: '3', title: 'Pro Team Strategies: T-Side Executes' },
-	{ id: '4', title: 'Map Mastery: Dust 2 Complete Guide' }
+	{ value: '1', label: 'CS2 Fundamentals: From Beginner to Competitive' },
+	{ value: '2', label: 'Advanced Weapon Mastery: Rifles' },
+	{ value: '3', label: 'Pro Team Strategies: T-Side Executes' },
+	{ value: '4', label: 'Map Mastery: Dust 2 Complete Guide' }
 ];
 
 type CourseDetailsFormProps = {
@@ -41,6 +43,9 @@ type CourseDetailsFormProps = {
 export const CourseDetailsForm = ({
 	courseState: [course, setCourse]
 }: CourseDetailsFormProps) => {
+	const [selectedPrerequisiteCourses, setSelectedPrerequisiteCourses] =
+		useState<string[]>([]);
+
 	// Handle course details change
 	const handleCourseChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -166,23 +171,16 @@ export const CourseDetailsForm = ({
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="prerequisite">Prerequisite Course (Optional)</Label>
-						<Select
-							value={course.prerequisiteId?.toString()}
-							onValueChange={value => handleSelectChange('prerequisite', value)}
-						>
-							<SelectTrigger className="border-[#333333] bg-[#151515] text-white">
-								<SelectValue placeholder="None" />
-							</SelectTrigger>
-							<SelectContent className="border-[#333333] bg-[#151515] text-white">
-								<SelectItem value="none">None</SelectItem>
-								{prerequisiteCourses.map(course => (
-									<SelectItem key={course.id} value={course.id}>
-										{course.title}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+						<Label htmlFor="prerequisite">
+							Prerequisite Courses (Optional)
+						</Label>
+						<MultiSelect
+							className="border-[#333333] bg-[#151515] text-white"
+							options={prerequisiteCourses}
+							onValueChange={setSelectedPrerequisiteCourses}
+							value={selectedPrerequisiteCourses}
+							placeholder="Select prerequisite courses"
+						/>
 					</div>
 				</div>
 			</CardContent>

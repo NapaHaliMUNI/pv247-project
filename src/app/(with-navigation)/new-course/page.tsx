@@ -18,9 +18,8 @@ const initialCourse: NewCourse = {
 	longDescription: '',
 	duration: null,
 	difficulty: null,
-	prerequisiteId: null,
 	category: null,
-	image: 'https://placehold.co/600x400.png?text=Course+Image'
+	imageUrl: 'https://placehold.co/600x400.png?text=Course+Image'
 };
 
 const CourseMakerPage = () => {
@@ -56,6 +55,8 @@ const CourseMakerPage = () => {
 			setActiveTab('lessons');
 		} else if (currentStep === 2) {
 			setActiveTab('questions');
+		} else if (currentStep === 3) {
+			setActiveTab('preview');
 		}
 	};
 
@@ -63,7 +64,9 @@ const CourseMakerPage = () => {
 	const prevStep = () => {
 		setCurrentStep(currentStep - 1);
 
-		if (currentStep === 3) {
+		if (currentStep === 4) {
+			setActiveTab('questions');
+		} else if (currentStep === 3) {
 			setActiveTab('lessons');
 		} else if (currentStep === 2) {
 			setActiveTab('details');
@@ -78,7 +81,7 @@ const CourseMakerPage = () => {
 		console.log('Saving questions:', courseLessonQuestions);
 
 		// For demo purposes, just redirect to courses page
-		router.push('/courses');
+		// router.push('/courses');
 	};
 
 	return (

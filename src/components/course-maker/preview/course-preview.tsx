@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Layers, HelpCircle } from 'lucide-react';
+import { ArrowRight, Layers, HelpCircle, Video } from 'lucide-react';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
 import {
 	Accordion,
@@ -16,7 +18,7 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import type { NewCourse } from '@/db/schema/course';
+import type { Course, NewCourse } from '@/db/schema/course';
 import type { NewCourseLesson } from '@/db/schema/course-lesson';
 import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
@@ -24,7 +26,7 @@ type CoursePreviewProps = {
 	course: NewCourse;
 	courseLessons: NewCourseLesson[];
 	courseLessonQuestions: NewCourseLessonQuestion[];
-	prerequisiteCourses: { id: string; title: string }[];
+	prerequisiteCourses: Course[];
 };
 
 export const CoursePreview = ({
@@ -68,7 +70,7 @@ export const CoursePreview = ({
 				<div className="relative mb-6 aspect-video overflow-hidden rounded-lg">
 					<Image
 						src={
-							course.image ||
+							course.imageUrl ??
 							'https://placehold.co/600x400.png?text=Course+Image'
 						}
 						alt="Course preview"
@@ -87,25 +89,26 @@ export const CoursePreview = ({
 					</p>
 				</div>
 
-				{course.prerequisiteId && (
+				{prerequisiteCourses.length > 0 && (
 					<div className="mb-6 rounded-lg border border-[#2A2A2A] bg-[#151515] p-4">
 						<div className="flex items-start">
 							<ArrowRight className="mt-0.5 mr-3 h-5 w-5 text-[#FF5500]" />
 							<div>
-								<h4 className="font-medium text-white">Prerequisite Course</h4>
+								<h4 className="font-medium text-white">Prerequisite Courses</h4>
 								<p className="text-sm text-[#ABABAB]">
-									It is recommended to complete the following course first:
+									It is recommended to complete the following courses first:
 								</p>
-								<Link
-									href={`/courses/${course.prerequisiteId}`}
-									className="mt-1 inline-block text-sm font-medium text-[#FF5500] hover:underline"
-								>
-									{
-										prerequisiteCourses.find(
-											c => c.id === course.prerequisiteId
-										)?.title
-									}
-								</Link>
+								<div className="mt-2 space-y-1">
+									{prerequisiteCourses.map(prereqCourse => (
+										<Link
+											key={prereqCourse.id}
+											href={`/courses/${prereqCourse.id}`}
+											className="block text-sm font-medium text-[#FF5500] hover:underline"
+										>
+											• {prereqCourse.title}
+										</Link>
+									))}
+								</div>
 							</div>
 						</div>
 					</div>
@@ -129,16 +132,28 @@ export const CoursePreview = ({
 											<span>
 												Lesson {lessonIndex + 1}: {lesson.title}
 											</span>
+											{lesson.videoUrl && (
+												<Badge className="ml-2 flex items-center gap-1 bg-[#4BB4E6]/10 text-[#4BB4E6]">
+													<Video className="h-3 w-3" />
+													Video
+												</Badge>
+											)}
 										</div>
 									</AccordionTrigger>
 									<AccordionContent>
 										<div className="space-y-4 pl-7">
+											{lesson.videoUrl ? (
+												<LiteYouTubeEmbed
+													id={lesson.videoUrl.split('v=')[1]}
+													title="Lesson Video"
+												/>
+											) : null}
 											<div className="py-2">
 												<h4 className="mb-2 font-medium text-white">
 													Lesson Content
 												</h4>
 												<p className="text-[#ABABAB]">
-													{lesson.content.substring(0, 150)}...
+													{lesson.contentHtml.substring(0, 150)}...
 												</p>
 											</div>
 

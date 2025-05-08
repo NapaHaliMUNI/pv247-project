@@ -1,6 +1,6 @@
 'use client';
 
-import { BookOpen, Edit, Trash2 } from 'lucide-react';
+import { BookOpen, Edit, Trash2, Video } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -10,6 +10,7 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import type { NewCourseLesson } from '@/db/schema/course-lesson';
 
 type LessonListProps = {
@@ -59,8 +60,14 @@ export const LessonList = ({
 								<div className="flex-grow">
 									<h4 className="font-medium text-white">{lesson.title}</h4>
 									<p className="mt-1 line-clamp-1 text-sm text-[#ABABAB]">
-										{lesson.content.substring(0, 60)}...
+										{lesson.contentHtml.substring(0, 60)}...
 									</p>
+									{lesson.videoUrl ? (
+										<Badge className="mt-2 flex w-fit items-center gap-1 bg-[#4BB4E6]/10 text-[#4BB4E6]">
+											<Video className="h-3 w-3" />
+											Video included
+										</Badge>
+									) : null}
 								</div>
 								<div className="ml-2 flex-shrink-0">
 									<Button

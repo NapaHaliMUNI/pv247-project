@@ -3,7 +3,7 @@
 import { FileText, BookOpen, HelpCircle, Eye } from 'lucide-react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { NewCourse } from '@/db/schema/course';
+import type { Course, NewCourse } from '@/db/schema/course';
 import type { NewCourseLesson } from '@/db/schema/course-lesson';
 import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
@@ -118,9 +118,61 @@ export const CourseMakerTabs = ({
 );
 
 // Sample prerequisite courses
-const prerequisiteCourses = [
-	{ id: '1', title: 'CS2 Fundamentals: From Beginner to Competitive' },
-	{ id: '2', title: 'Advanced Weapon Mastery: Rifles' },
-	{ id: '3', title: 'Pro Team Strategies: T-Side Executes' },
-	{ id: '4', title: 'Map Mastery: Dust 2 Complete Guide' }
+const prerequisiteCourses: Course[] = [
+	{
+		id: '1',
+		title: 'CS2 Fundamentals: From Beginner to Competitive',
+		duration: 'Short (10-30 minutes)',
+		shortDescription: '',
+		longDescription: '',
+		category: 'Fundamentals',
+		difficulty: 'Silver',
+		createdAt: null,
+		createdBy: null,
+		updatedAt: null,
+		updatedBy: null,
+		deletedBy: null
+	},
+	{
+		id: '2',
+		title: 'Advanced Weapon Mastery: Rifles',
+		duration: 'Long (60+ minutes)',
+		shortDescription: '',
+		longDescription: '',
+		category: 'Weapon Skills',
+		difficulty: 'The Global Elite',
+		createdAt: null,
+		createdBy: null,
+		updatedAt: null,
+		updatedBy: null,
+		deletedBy: null
+	},
+	{
+		id: '3',
+		title: 'Pro Team Strategies: T-Side Executes',
+		duration: 'Long (60+ minutes)',
+		shortDescription: '',
+		longDescription: '',
+		category: 'Maps',
+		difficulty: 'The Global Elite',
+		createdAt: null,
+		createdBy: null,
+		updatedAt: null,
+		updatedBy: null,
+		deletedBy: null
+	},
+	{
+		id: '4',
+		title: 'Map Mastery: Dust 2 Complete Guide',
+		duration: 'Medium (30-60 minutes)',
+		shortDescription: '',
+		longDescription: '',
+		category: 'Maps',
+		difficulty: 'Legendary Eagle',
+		createdAt: null,
+		createdBy: null,
+		updatedAt: null,
+		updatedBy: null,
+		deletedBy: null
+	}
 ];

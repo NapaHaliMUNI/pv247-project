@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Video } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Button } from '@/components/ui/button';
@@ -45,7 +45,8 @@ export const LessonForm = ({
 				title: name === 'title' ? value : '',
 				courseId: course.id,
 				lessonOrder: courseLessons.length,
-				content: name === 'content' ? value : ''
+				contentHtml: name === 'contentHtml' ? value : '',
+				videoUrl: ''
 			});
 		} else {
 			setCurrentLesson({
@@ -57,12 +58,12 @@ export const LessonForm = ({
 
 	// Add lesson
 	const addLesson = () => {
-		if (!currentLesson?.title || !currentLesson.content) return;
+		if (!currentLesson?.title || !currentLesson.contentHtml) return;
 
 		const newLesson = {
 			...currentLesson,
 			id: editingLessonId ?? uuidv4(),
-			order: editingLessonId
+			lessonOrder: editingLessonId
 				? (courseLessons.find(l => l.id === editingLessonId)?.lessonOrder ??
 					courseLessons.length)
 				: courseLessons.length
@@ -102,13 +103,36 @@ export const LessonForm = ({
 				</div>
 
 				<div className="space-y-2">
+					<Label htmlFor="videoUrl">Video URL (Optional)</Label>
+					<div className="flex gap-2">
+						<Input
+							id="videoUrl"
+							name="videoUrl"
+							placeholder="e.g. https://www.youtube.com/watch?v=..."
+							className="flex-1 border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
+							value={currentLesson?.videoUrl ?? ''}
+							onChange={handleLessonChange}
+						/>
+						<Button
+							variant="outline"
+							className="border-[#333333] bg-transparent text-white hover:bg-[#1F1F1F]"
+							type="button"
+						>
+							<Video className="mr-2 h-4 w-4" />
+							Preview
+						</Button>
+					</div>
+					<p className="text-xs text-[#ABABAB]">Supports YouTube links only</p>
+				</div>
+
+				<div className="space-y-2">
 					<Label htmlFor="lessonContent">Lesson Content</Label>
 					<Textarea
 						id="lessonContent"
-						name="content"
+						name="contentHtml"
 						placeholder="Provide the theory content for this lesson"
 						className="min-h-[300px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
-						value={currentLesson?.content}
+						value={currentLesson?.contentHtml}
 						onChange={handleLessonChange}
 					/>
 				</div>
@@ -129,7 +153,7 @@ export const LessonForm = ({
 							<Button
 								className="bg-[#FF5500] text-white hover:bg-[#FF5500]/90"
 								onClick={addLesson}
-								disabled={!currentLesson?.title || !currentLesson.content}
+								disabled={!currentLesson?.title || !currentLesson.contentHtml}
 							>
 								Update Lesson
 							</Button>
@@ -138,7 +162,7 @@ export const LessonForm = ({
 						<Button
 							className="bg-[#FF5500] text-white hover:bg-[#FF5500]/90"
 							onClick={addLesson}
-							disabled={!currentLesson?.title || !currentLesson.content}
+							disabled={!currentLesson?.title || !currentLesson.contentHtml}
 						>
 							<Plus className="mr-2 h-4 w-4" />
 							Add Lesson

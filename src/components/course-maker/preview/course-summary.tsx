@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import type { NewCourse } from '@/db/schema/course';
+import type { Course, NewCourse } from '@/db/schema/course';
 import type { NewCourseLesson } from '@/db/schema/course-lesson';
 import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
@@ -14,6 +14,7 @@ type CourseSummaryProps = {
 	course: NewCourse;
 	courseLessons: NewCourseLesson[];
 	courseLessonQuestions: NewCourseLessonQuestion[];
+	coursePrerequisites: Course[];
 	saveCourse: () => void;
 };
 
@@ -21,6 +22,7 @@ export const CourseSummary = ({
 	course,
 	courseLessons,
 	courseLessonQuestions,
+	coursePrerequisites,
 	saveCourse
 }: CourseSummaryProps) => (
 	<Card className="sticky top-4 border-[#2A2A2A] bg-[#1A1A1A] text-white">
@@ -97,6 +99,21 @@ export const CourseSummary = ({
 						) : (
 							<Badge className="bg-[#2A2A2A] text-[#ABABAB]">Optional</Badge>
 						)}
+					</div>
+
+					<div className="flex items-center justify-between">
+						<span className="text-sm text-[#ABABAB]">Prerequisites</span>
+						<Badge
+							className={
+								coursePrerequisites.length > 0
+									? 'bg-green-500/10 text-green-500'
+									: 'bg-[#2A2A2A] text-[#ABABAB]'
+							}
+						>
+							{coursePrerequisites.length > 0
+								? `${coursePrerequisites.length} Selected`
+								: 'Optional'}
+						</Badge>
 					</div>
 				</div>
 			</div>

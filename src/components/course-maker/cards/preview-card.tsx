@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { BarChart2, Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
@@ -11,6 +10,8 @@ import {
 	CardTitle
 } from '@/components/ui/card';
 import type { NewCourse } from '@/db/schema/course';
+
+import { ImageUpload } from '../image-upload';
 
 type CoursePreviewCardProps = {
 	course: NewCourse;
@@ -29,7 +30,7 @@ export const CoursePreviewCard = ({ course }: CoursePreviewCardProps) => (
 				<div className="relative aspect-video">
 					<Image
 						src={
-							course.image ||
+							course.imageUrl ??
 							'https://placehold.co/600x400.png?text=Course+Image'
 						}
 						alt="Course preview"
@@ -88,12 +89,7 @@ export const CoursePreviewCard = ({ course }: CoursePreviewCardProps) => (
 			</div>
 
 			<div className="mt-6">
-				<Button
-					variant="outline"
-					className="w-full border-[#333333] bg-transparent text-white hover:bg-[#1F1F1F]"
-				>
-					Upload Course Image
-				</Button>
+				<ImageUpload onImageUploaded={url => console.log(url)} />
 			</div>
 		</CardContent>
 	</Card>

@@ -1,10 +1,7 @@
-import {
-	sqliteTable,
-	primaryKey,
-	integer,
-	text
-} from 'drizzle-orm/sqlite-core';
+import { sqliteTable, primaryKey, text } from 'drizzle-orm/sqlite-core';
 import { relations, sql } from 'drizzle-orm';
+import type { z } from 'zod';
+import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
 
 import { user } from './user';
 import { course } from './course';
@@ -13,15 +10,11 @@ import { courseLesson } from './course-lesson';
 export const userCourses = sqliteTable(
 	'user_courses',
 	{
-		userId: integer('user_id').notNull(),
-		courseId: integer('course_id').notNull(),
-		currentLessonId: integer('current_lesson_id'),
-		completed: integer('completed', { mode: 'boolean' })
-			.notNull()
-			.default(false),
-		enrolledAt: text('enrolled_at').default(sql`(CURRENT_DATE)`),
-		completedAt: text('completed_at'),
-		lastAccessedAt: text('last_accessed_at').default(sql`(CURRENT_DATE)`)
+		userId: text('user_id').notNull(),
+		courseId: text('course_id').notNull(),
+		currentLessonId: text('current_lesson_id'),
+		createdAt: text('created_at').default(sql`(CURRENT_DATE)`),
+		completedAt: text('completed_at').default(sql`NULL`)
 	},
 	table => [primaryKey({ columns: [table.userId, table.courseId] })]
 );
@@ -41,5 +34,19 @@ export const userCoursesRelations = relations(userCourses, ({ one }) => ({
 	})
 }));
 
-export type UserCourse = typeof userCourses.$inferSelect;
-export type NewUserCourse = typeof userCourses.$inferInsert;
+export const userCoursesSelectSchema = createSelectSchema(userCourses, {
+	userId: schema => schema.uuid(),
+	courseId: schema => schema.uuid(),
+	currentLessonId: schema => schema.uuid(),
+	createdAt: schema => schema.datetime(),
+	completedAt: schema => schema.datetime().optional()
+});
+export type UserCourse = z.infer<typeof userCoursesSelectSchema>;
+export const userCoursesInsertSchema = createInsertSchema(userCourses, {
+	userId: schema => schema.uuid(),
+	courseId: schema => schema.uuid(),
+	currentLessonId: schema => schema.uuid().optional(),
+	createdAt: schema => schema.datetime().optional(),
+	completedAt: schema => schema.datetime().optional()
+});
+export type NewUserCourse = z.infer<typeof userCoursesInsertSchema>;

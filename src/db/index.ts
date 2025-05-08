@@ -13,6 +13,7 @@ import {
 	courseLessonQuestionRelations
 } from '@/db/schema/course-lesson-question';
 import { userCourses, userCoursesRelations } from '@/db/schema/user-courses';
+import { coursePrerequisites } from '@/db/schema/course-prerequisistes';
 
 const client = createClient({
 	url: process.env.TURSO_DATABASE_URL!,
@@ -38,6 +39,7 @@ export const db = drizzle(client, {
 		courseRelations,
 		courseLessonRelations,
 		courseLessonQuestionRelations,
-		userCoursesRelations
+		userCoursesRelations,
+		coursePrerequisites
 	}
 });

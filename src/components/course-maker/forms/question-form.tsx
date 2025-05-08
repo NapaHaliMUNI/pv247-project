@@ -64,7 +64,8 @@ export const QuestionForm = ({
 					{ id: 1, text: '', isCorrect: false },
 					{ id: 2, text: '', isCorrect: false }
 				],
-				explanation: '',
+				explanationHtml: '',
+				lessonId: null,
 				questionOrder: courseLessonQuestions.length
 			});
 		} else {
@@ -90,7 +91,8 @@ export const QuestionForm = ({
 									{ id: 2, text: 'False', isCorrect: false }
 								]
 							: [],
-					explanation: '',
+					explanationHtml: '',
+					lessonId: null,
 					questionOrder: courseLessonQuestions.length
 				};
 			}
@@ -237,7 +239,7 @@ export const QuestionForm = ({
 										lessonId: value,
 										type: 'radio',
 										options: [],
-										explanation: '',
+										explanationHtml: '',
 										questionOrder: courseLessonQuestions.length
 									};
 								}
@@ -396,10 +398,10 @@ export const QuestionForm = ({
 					<Label htmlFor="explanation">Explanation (Optional)</Label>
 					<Textarea
 						id="explanation"
-						name="explanation"
+						name="explanationHtml"
 						placeholder="Provide an explanation for the correct answer"
 						className="min-h-[100px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
-						value={currentQuestion?.explanation ?? ''}
+						value={currentQuestion?.explanationHtml ?? ''}
 						onChange={handleQuestionChange}
 					/>
 				</div>

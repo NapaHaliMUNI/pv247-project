@@ -3,7 +3,7 @@
 import { ChevronLeft } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import type { NewCourse } from '@/db/schema/course';
+import type { Course, NewCourse } from '@/db/schema/course';
 import type { NewCourseLesson } from '@/db/schema/course-lesson';
 import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
 
@@ -16,7 +16,7 @@ type CoursePreviewTabProps = {
 	courseLessonQuestions: NewCourseLessonQuestion[];
 	prevStep: () => void;
 	saveCourse: () => void;
-	prerequisiteCourses: { id: string; title: string }[];
+	prerequisiteCourses: Course[];
 };
 
 export const CoursePreviewTab = ({
@@ -42,6 +42,7 @@ export const CoursePreviewTab = ({
 					course={course}
 					courseLessons={courseLessons}
 					courseLessonQuestions={courseLessonQuestions}
+					coursePrerequisites={prerequisiteCourses}
 					saveCourse={saveCourse}
 				/>
 			</div>
