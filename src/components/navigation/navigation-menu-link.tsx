@@ -17,9 +17,16 @@ const NavigationMenuLink = ({
 	const pathname = usePathname();
 	const isActive = href === pathname;
 	return (
-		<UiNavigationMenuLink asChild active={isActive}>
-			<Link href={href}>{children}</Link>
-		</UiNavigationMenuLink>
+		<Link
+			href={href}
+			className={
+				isActive
+					? 'text-foreground border-b-2 border-[#FF5500] py-1 text-sm font-medium'
+					: 'text-foreground/90 hover:text-foreground border-b-2 border-transparent py-1 text-sm font-medium transition-colors'
+			}
+		>
+			{children}
+		</Link>
 	);
 };
 

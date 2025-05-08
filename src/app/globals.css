@@ -51,7 +51,7 @@
 :root {
     /* Custom */
     --navigation-height: 60px;
-    --footer-height: 140px;
+    --footer-height: 300px;
 
     /* Shadcn UI */
     --radius: 1rem;
