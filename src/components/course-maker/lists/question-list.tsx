@@ -65,7 +65,7 @@ export const QuestionList = ({
 				{courseLessons.length > 0 ? (
 					<Accordion type="multiple" className="w-full">
 						{courseLessons.map(lesson => {
-							const lessonQuestions = getQuestionsForLesson(lesson.id ?? -1);
+							const lessonQuestions = getQuestionsForLesson(lesson.id ?? '');
 							return (
 								<AccordionItem
 									key={lesson.id}

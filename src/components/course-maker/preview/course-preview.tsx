@@ -119,7 +119,7 @@ export const CoursePreview = ({
 
 					<Accordion type="single" collapsible className="w-full">
 						{courseLessons.map((lesson, lessonIndex) => {
-							const lessonQuestions = getQuestionsForLesson(lesson.id ?? -1);
+							const lessonQuestions = getQuestionsForLesson(lesson.id ?? '');
 							return (
 								<AccordionItem
 									key={lesson.id}
