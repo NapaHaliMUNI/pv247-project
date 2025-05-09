@@ -15,6 +15,7 @@
     "drizzle-studio-prod": "npx drizzle-kit studio --config=drizzle-prod.config.ts"
   },
   "dependencies": {
+    "@dnd-kit/react": "^0.1.12",
     "@libsql/client": "^0.15.4",
     "@radix-ui/react-accordion": "^1.2.8",
     "@radix-ui/react-checkbox": "^1.2.3",
