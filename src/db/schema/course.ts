@@ -62,7 +62,12 @@ export const courseRelations = relations(course, ({ one, many }) => ({
 		fields: [course.updatedBy],
 		references: [user.id]
 	}),
-	coursePrerequisites: many(coursePrerequisites),
+	prerequisites: many(coursePrerequisites, {
+		relationName: 'courseToPrerequisites'
+	}),
+	prerequisiteFor: many(coursePrerequisites, {
+		relationName: 'prerequisiteToCourses'
+	}),
 	courseLessons: many(courseLesson)
 }));
 
