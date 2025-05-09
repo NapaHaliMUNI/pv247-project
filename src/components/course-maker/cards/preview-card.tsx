@@ -14,7 +14,7 @@ import { useCourseMakerContext } from '@/store/course-maker/course-maker-context
 import { ImageUpload } from '../image-upload';
 
 export const CoursePreviewCard = () => {
-	const { course } = useCourseMakerContext();
+	const { course, setCourse } = useCourseMakerContext();
 
 	return (
 		<Card className="border-[#2A2A2A] bg-[#1A1A1A] text-white">
@@ -88,7 +88,14 @@ export const CoursePreviewCard = () => {
 				</div>
 
 				<div className="mt-6">
-					<ImageUpload onImageUploaded={url => console.log(url)} />
+					<ImageUpload
+						onImageUploaded={url => {
+							setCourse(prev => ({
+								...prev,
+								imageUrl: url
+							}));
+						}}
+					/>
 				</div>
 			</CardContent>
 		</Card>

@@ -4,8 +4,11 @@ import type React from 'react';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { Upload, X, Loader2 } from 'lucide-react';
+import type { PutBlobResult } from '@vercel/blob';
 
 import { Button } from '@/components/ui/button';
+import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
+import { useCreateCourseThumbnailMutation } from '@/hooks/usePostCourseThumbnailMutation';
 
 type ImageUploadProps = {
 	onImageUploaded: (imageUrl: string) => void;
@@ -16,6 +19,9 @@ export const ImageUpload = ({
 	onImageUploaded,
 	className
 }: ImageUploadProps) => {
+	const { course } = useCourseMakerContext();
+	const mutation = useCreateCourseThumbnailMutation();
+
 	const [image, setImage] = useState<string>('');
 	const [isUploading, setIsUploading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -34,44 +40,48 @@ export const ImageUpload = ({
 			return;
 		}
 
-		// Check file size (limit to 5MB)
-		if (file.size > 5 * 1024 * 1024) {
-			setError('Image size must be less than 5MB');
+		// Check file size (limit to 4.5MB)
+		if (file.size > 4.5 * 1024 * 1024) {
+			setError('Image size must be less than 4.5MB');
 			return;
 		}
 
 		try {
 			setIsUploading(true);
 
-			// Create form data
+			// Upload to server
 			const formData = new FormData();
 			formData.append('file', file);
+			formData.append('courseId', course.id);
 
-			// Upload to server
-			const response = await fetch('/api/upload', {
-				method: 'POST',
-				body: formData
-			});
-
-			if (!response.ok) {
-				const errorData = await response.json();
-				throw new Error(errorData.error ?? 'Failed to upload image');
-			}
-
-			const data = await response.json();
-			setImage(data.url);
-			onImageUploaded(data.url);
+			mutation.mutate(
+				{
+					courseId: course.id,
+					file
+				},
+				{
+					onSuccess: (data: PutBlobResult) => {
+						setImage(data.url);
+						onImageUploaded(data.url);
+						setIsUploading(false);
+					},
+					onError: (error: Error) => {
+						console.error('Error uploading image:', error);
+						setError(error.message);
+					}
+				}
+			);
 		} catch (err) {
 			console.error('Error uploading image:', err);
-			setError(err instanceof Error ? err.message : 'Failed to upload image');
-		} finally {
+			setError(
+				err instanceof Error ? err.message : 'Failed to upload course thumbnail'
+			);
 			setIsUploading(false);
 		}
 	};
 
 	const handleRemoveImage = () => {
 		setImage('');
-		onImageUploaded('');
 		if (fileInputRef.current) {
 			fileInputRef.current.value = '';
 		}
@@ -116,7 +126,7 @@ export const ImageUpload = ({
 							<p className="text-center text-sm text-[#ABABAB]">
 								Drag and drop an image or click to browse
 								<br />
-								(Max size: 5MB)
+								(Max size: 4.5MB)
 							</p>
 						</>
 					)}
@@ -125,7 +135,9 @@ export const ImageUpload = ({
 				<div className="relative overflow-hidden rounded-lg">
 					<div className="relative aspect-video">
 						<Image
-							src={image || '/placeholder.svg'}
+							src={
+								image ?? 'https://placehold.co/600x400.png?text=Course+Image'
+							}
 							alt="Course thumbnail"
 							fill
 							className="object-cover"
@@ -133,7 +145,6 @@ export const ImageUpload = ({
 					</div>
 					<div className="absolute top-2 right-2 flex gap-2">
 						<Button
-							variant="outline"
 							size="icon"
 							className="h-8 w-8 border-[#333333] bg-[#1A1A1A]/80 text-white hover:bg-[#1A1A1A]"
 							onClick={() => fileInputRef.current?.click()}
@@ -142,7 +153,6 @@ export const ImageUpload = ({
 							<Upload className="h-4 w-4" />
 						</Button>
 						<Button
-							variant="outline"
 							size="icon"
 							className="h-8 w-8 border-[#333333] bg-[#1A1A1A]/80 text-white hover:bg-[#1A1A1A]"
 							onClick={handleRemoveImage}
