@@ -16,9 +16,7 @@ export const ImageUpload = ({
 	onImageUploaded,
 	className
 }: ImageUploadProps) => {
-	const [image, setImage] = useState<string>(
-		'https://placehold.co/400x600.png?text=Course+Image'
-	);
+	const [image, setImage] = useState<string>('');
 	const [isUploading, setIsUploading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);

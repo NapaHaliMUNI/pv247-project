@@ -18,23 +18,16 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import type { Course, NewCourse } from '@/db/schema/course';
-import type { NewCourseLesson } from '@/db/schema/course-lesson';
-import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
+import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
 
-type CoursePreviewProps = {
-	course: NewCourse;
-	courseLessons: NewCourseLesson[];
-	courseLessonQuestions: NewCourseLessonQuestion[];
-	prerequisiteCourses: Course[];
-};
+export const CoursePreview = () => {
+	const {
+		course,
+		courseLessons,
+		courseLessonQuestions,
+		selectedPrerequisiteCourses
+	} = useCourseMakerContext();
 
-export const CoursePreview = ({
-	course,
-	courseLessons,
-	courseLessonQuestions,
-	prerequisiteCourses
-}: CoursePreviewProps) => {
 	// Get questions for a specific lesson
 	const getQuestionsForLesson = (lessonId: string) =>
 		courseLessonQuestions.filter(question => question.lessonId === lessonId);
@@ -89,7 +82,7 @@ export const CoursePreview = ({
 					</p>
 				</div>
 
-				{prerequisiteCourses.length > 0 && (
+				{selectedPrerequisiteCourses.length > 0 && (
 					<div className="mb-6 rounded-lg border border-[#2A2A2A] bg-[#151515] p-4">
 						<div className="flex items-start">
 							<ArrowRight className="mt-0.5 mr-3 h-5 w-5 text-[#FF5500]" />
@@ -99,13 +92,14 @@ export const CoursePreview = ({
 									It is recommended to complete the following courses first:
 								</p>
 								<div className="mt-2 space-y-1">
-									{prerequisiteCourses.map(prereqCourse => (
+									{/* TODO: selectedPrerequisiteCourses can only be string because of the MultiSelect limitation. FIX THIS TO FIND THE COURSE THROUGH API OR SA */}
+									{selectedPrerequisiteCourses.map(prereqCourse => (
 										<Link
-											key={prereqCourse.id}
-											href={`/courses/${prereqCourse.id}`}
+											key={prereqCourse}
+											href={`/courses/${prereqCourse}`}
 											className="block text-sm font-medium text-[#FF5500] hover:underline"
 										>
-											• {prereqCourse.title}
+											• {prereqCourse}
 										</Link>
 									))}
 								</div>
@@ -119,11 +113,11 @@ export const CoursePreview = ({
 
 					<Accordion type="single" collapsible className="w-full">
 						{courseLessons.map((lesson, lessonIndex) => {
-							const lessonQuestions = getQuestionsForLesson(lesson.id ?? '');
+							const lessonQuestions = getQuestionsForLesson(lesson.id);
 							return (
 								<AccordionItem
 									key={lesson.id}
-									value={lesson.id?.toString() ?? ''}
+									value={lesson.id.toString()}
 									className="border-[#2A2A2A]"
 								>
 									<AccordionTrigger className="py-4 text-white hover:text-white hover:no-underline">

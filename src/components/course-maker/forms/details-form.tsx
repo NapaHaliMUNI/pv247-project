@@ -1,7 +1,6 @@
 'use client';
 
 import type React from 'react';
-import { useState } from 'react';
 
 import {
 	Card,
@@ -21,30 +20,28 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import {
-	type NewCourse,
 	courseCategorySchema,
 	courseDifficultySchema,
 	courseDurationSchema
 } from '@/db/schema/course';
 import { MultiSelect } from '@/components/ui/multi-select';
+import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
 
 // Sample prerequisite courses
-const prerequisiteCourses = [
+const prerequisiteCoursesForMultiSelect = [
 	{ value: '1', label: 'CS2 Fundamentals: From Beginner to Competitive' },
 	{ value: '2', label: 'Advanced Weapon Mastery: Rifles' },
 	{ value: '3', label: 'Pro Team Strategies: T-Side Executes' },
 	{ value: '4', label: 'Map Mastery: Dust 2 Complete Guide' }
 ];
 
-type CourseDetailsFormProps = {
-	courseState: [NewCourse, (course: NewCourse) => void];
-};
-
-export const CourseDetailsForm = ({
-	courseState: [course, setCourse]
-}: CourseDetailsFormProps) => {
-	const [selectedPrerequisiteCourses, setSelectedPrerequisiteCourses] =
-		useState<string[]>([]);
+export const CourseDetailsForm = () => {
+	const {
+		course,
+		setCourse,
+		selectedPrerequisiteCourses,
+		setSelectedPrerequisiteCourses
+	} = useCourseMakerContext();
 
 	// Handle course details change
 	const handleCourseChange = (
@@ -79,7 +76,7 @@ export const CourseDetailsForm = ({
 					<Input
 						id="title"
 						name="title"
-						placeholder="e.g. Advanced AWP Techniques"
+						placeholder="e.g. Advanced AWP Movement Guide"
 						className="border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
 						value={course.title}
 						onChange={handleCourseChange}
@@ -103,7 +100,7 @@ export const CourseDetailsForm = ({
 					<Textarea
 						id="longDescription"
 						name="longDescription"
-						placeholder="Provide a detailed description of what students will learn"
+						placeholder="Provide a detailed description of what will be covered in the course"
 						className="min-h-[150px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
 						value={course.longDescription}
 						onChange={handleCourseChange}
@@ -176,7 +173,7 @@ export const CourseDetailsForm = ({
 						</Label>
 						<MultiSelect
 							className="border-[#333333] bg-[#151515] text-white"
-							options={prerequisiteCourses}
+							options={prerequisiteCoursesForMultiSelect}
 							selectedValues={selectedPrerequisiteCourses}
 							setSelectedValues={setSelectedPrerequisiteCourses}
 							placeholder="Select prerequisite courses"
