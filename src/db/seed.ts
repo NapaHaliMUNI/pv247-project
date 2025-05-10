@@ -6,7 +6,12 @@ import { reset, seed } from 'drizzle-seed';
 import { v4 as uuidv4 } from 'uuid';
 
 import { user } from './schema/user';
-import { course } from './schema/course';
+import {
+	course,
+	courseCategorySchema,
+	courseDifficultySchema,
+	courseDurationSchema
+} from './schema/course';
 import { courseLesson } from './schema/course-lesson';
 import { courseLessonQuestion } from './schema/course-lesson-question';
 
@@ -77,24 +82,13 @@ const main = async () => {
 					defaultValue: 'https://placehold.co/600x400.png?text=Course+Image'
 				}),
 				difficulty: f.valuesFromArray({
-					values: ['Silver', 'Gold', 'Legendary Eagle', 'The Global Elite']
+					values: courseDifficultySchema.options
 				}),
 				duration: f.valuesFromArray({
-					values: [
-						'Short (10-30 minutes)',
-						'Medium (30-60 minutes)',
-						'Long (60+ minutes)'
-					]
+					values: courseDurationSchema.options
 				}),
 				category: f.valuesFromArray({
-					values: [
-						'Fundamentals',
-						'Weapon Skills',
-						'Movement',
-						'Maps',
-						'Utility',
-						'Game Sense'
-					]
+					values: courseCategorySchema.options
 				}),
 				createdAt: f.datetime(),
 				createdBy: f.valuesFromArray({
@@ -153,7 +147,7 @@ const main = async () => {
 				}),
 				questionOrder: f.intPrimaryKey(),
 				type: f.default({
-					defaultValue: 'checkbox'
+					defaultValue: 'radio'
 				}),
 				options: f.default({
 					defaultValue: [
