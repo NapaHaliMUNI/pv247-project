@@ -25,6 +25,7 @@ const main = async () => {
 	await reset(db, { courseLesson });
 	await reset(db, { courseLessonQuestion });
 
+	const userIds = Array.from({ length: 10 }, () => uuidv4());
 	const courseIds = Array.from({ length: 10 }, () => uuidv4());
 	const courseLessonIds = Array.from({ length: 10 }, () => uuidv4());
 
@@ -32,7 +33,7 @@ const main = async () => {
 		users: {
 			count: 10,
 			columns: {
-				id: f.uuid(),
+				id: f.valuesFromArray({ values: courseIds, isUnique: true }),
 				email: f.email(),
 				username: f.firstName(),
 				password: f.string(),
@@ -96,9 +97,13 @@ const main = async () => {
 					]
 				}),
 				createdAt: f.datetime(),
-				createdBy: f.default({ defaultValue: null }),
+				createdBy: f.valuesFromArray({
+					values: userIds
+				}),
 				updatedAt: f.datetime(),
-				updatedBy: f.default({ defaultValue: null }),
+				updatedBy: f.valuesFromArray({
+					values: userIds
+				}),
 				deletedAt: f.default({
 					defaultValue: null
 				}),
@@ -121,9 +126,13 @@ const main = async () => {
 				description: f.string(),
 				lessonOrder: f.intPrimaryKey(),
 				createdAt: f.datetime(),
-				createdBy: f.default({ defaultValue: null }),
+				createdBy: f.valuesFromArray({
+					values: userIds
+				}),
 				updatedAt: f.datetime(),
-				updatedBy: f.default({ defaultValue: null }),
+				updatedBy: f.valuesFromArray({
+					values: userIds
+				}),
 				deletedAt: f.default({
 					defaultValue: null
 				}),
@@ -163,9 +172,13 @@ const main = async () => {
 				title: f.string(),
 				explanationHtml: f.loremIpsum(),
 				createdAt: f.datetime(),
-				createdBy: f.default({ defaultValue: null }),
+				createdBy: f.valuesFromArray({
+					values: userIds
+				}),
 				updatedAt: f.datetime(),
-				updatedBy: f.default({ defaultValue: null }),
+				updatedBy: f.valuesFromArray({
+					values: userIds
+				}),
 				deletedAt: f.default({
 					defaultValue: null
 				}),
