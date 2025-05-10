@@ -1,9 +1,11 @@
 'use client';
 
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,195 +26,42 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import type { NewCourseLesson } from '@/db/schema/course-lesson';
-import type {
-	NewCourseLessonQuestion,
-	CourseQuestionOption
-} from '@/db/schema/course-lesson-question';
+import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
+import { getToolbarTemplate } from '@/utils/quillToolbarTemplate';
 
-type QuestionFormProps = {
-	courseLessons: NewCourseLesson[];
-	courseLessonQuestionsState: [
-		NewCourseLessonQuestion[],
-		(questions: NewCourseLessonQuestion[]) => void
-	];
-};
+export const QuestionForm = () => {
+	const {
+		courseLessons,
+		courseLessonQuestions,
+		currentQuestion,
+		setCurrentQuestion,
+		editingQuestionId,
+		setEditingQuestionId,
+		handleOptionChange,
+		handleQuestionTypeChange,
+		handleQuestionChange,
+		handleCorrectOptionChange,
+		addOption,
+		removeOption,
+		addQuestion
+	} = useCourseMakerContext();
 
-export const QuestionForm = ({
-	courseLessons,
-	courseLessonQuestionsState: [courseLessonQuestions, setCourseLessonQuestions]
-}: QuestionFormProps) => {
-	const [currentQuestion, setCurrentQuestion] =
-		useState<NewCourseLessonQuestion | null>(null);
-	const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
-		null
-	);
+	const { quill, quillRef } = useQuill({
+		modules: {
+			toolbar: getToolbarTemplate()
+		}
+	});
 
-	// Handle question change
-	const handleQuestionChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = e.target;
-		if (!currentQuestion) {
-			// Initialize with defaults for required properties
-			setCurrentQuestion({
-				id: uuidv4(),
-				title: name === 'title' ? value : '',
-				type: 'radio',
-				options: [
-					{ id: 1, text: '', isCorrect: false },
-					{ id: 2, text: '', isCorrect: false }
-				],
-				explanationHtml: '',
-				lessonId: null,
-				questionOrder: courseLessonQuestions.length
-			});
-		} else {
-			setCurrentQuestion({
-				...currentQuestion,
-				[name]: value
+	useEffect(() => {
+		if (quill) {
+			quill.on('text-change', () => {
+				setCurrentQuestion(prev => ({
+					...prev,
+					explanationHtml: quill.root.innerHTML
+				}));
 			});
 		}
-	};
-
-	// Handle question type change
-	const handleQuestionTypeChange = (type: NewCourseLessonQuestion['type']) => {
-		setCurrentQuestion(current => {
-			if (!current) {
-				return {
-					id: uuidv4(),
-					title: '',
-					type,
-					options:
-						type === 'true-false'
-							? [
-									{ id: 1, text: 'True', isCorrect: false },
-									{ id: 2, text: 'False', isCorrect: false }
-								]
-							: [],
-					explanationHtml: '',
-					lessonId: null,
-					questionOrder: courseLessonQuestions.length
-				};
-			}
-
-			return {
-				...current,
-				type,
-				options:
-					type === 'true-false'
-						? [
-								{ id: 1, text: 'True', isCorrect: false },
-								{ id: 2, text: 'False', isCorrect: false }
-							]
-						: current.options
-			};
-		});
-	};
-
-	// Handle option change
-	const handleOptionChange = (id: number, text: string) => {
-		if (!currentQuestion) return;
-
-		setCurrentQuestion(current => {
-			if (!current) return null;
-			return {
-				...current,
-				options: current.options.map((option: CourseQuestionOption) =>
-					option.id === id ? { ...option, text } : option
-				)
-			};
-		});
-	};
-
-	// Handle correct option change
-	const handleCorrectOptionChange = (id: number) => {
-		if (!currentQuestion) return;
-
-		setCurrentQuestion({
-			...currentQuestion,
-			options: currentQuestion.options.map((option: CourseQuestionOption) =>
-				currentQuestion.type === 'radio' ||
-				currentQuestion.type === 'true-false'
-					? { ...option, isCorrect: option.id === id }
-					: {
-							...option,
-							isCorrect: option.id === id ? !option.isCorrect : option.isCorrect
-						}
-			)
-		});
-	};
-
-	// Add option
-	const addOption = () => {
-		if (!currentQuestion) return;
-		if (currentQuestion.type === 'true-false') return;
-
-		setCurrentQuestion({
-			...currentQuestion,
-			options: [
-				...currentQuestion.options,
-				{
-					id: currentQuestion.options.length + 1,
-					text: '',
-					isCorrect: false
-				}
-			]
-		});
-	};
-
-	// Remove option
-	const removeOption = (id: number) => {
-		if (!currentQuestion) return;
-		if (currentQuestion.options.length <= 2) return;
-
-		setCurrentQuestion({
-			...currentQuestion,
-			options: currentQuestion.options.filter(option => option.id !== id)
-		});
-	};
-
-	// Add question
-	const addQuestion = () => {
-		// Validate required fields
-		if (
-			!currentQuestion?.title ||
-			!currentQuestion.lessonId ||
-			currentQuestion.options.some(opt => !opt.text)
-		) {
-			return;
-		}
-
-		// Validate at least one correct answer
-		if (!currentQuestion.options.some(opt => opt.isCorrect)) {
-			return;
-		}
-
-		// Create new question object
-		const newQuestion: NewCourseLessonQuestion = {
-			...currentQuestion,
-			id: editingQuestionId ?? uuidv4(),
-			lessonId: currentQuestion.lessonId,
-			questionOrder: editingQuestionId
-				? (courseLessonQuestions.find(q => q.id === editingQuestionId)
-						?.questionOrder ?? courseLessonQuestions.length)
-				: courseLessonQuestions.length
-		};
-
-		// Update the course lesson questions state
-		const updatedQuestions = editingQuestionId
-			? courseLessonQuestions.map(question =>
-					question.id === editingQuestionId ? newQuestion : question
-				)
-			: [...courseLessonQuestions, newQuestion];
-
-		setCourseLessonQuestions(updatedQuestions);
-
-		// Reset the current question state
-		setCurrentQuestion(null);
-		setEditingQuestionId(null);
-	};
+	}, [quill, setCurrentQuestion]);
 
 	return (
 		<Card className="border-[#2A2A2A] bg-[#1A1A1A] text-white">
@@ -252,7 +101,7 @@ export const QuestionForm = ({
 						</SelectTrigger>
 						<SelectContent className="border-[#333333] bg-[#151515] text-white">
 							{courseLessons.map(lesson => (
-								<SelectItem key={lesson.id} value={lesson.id?.toString() ?? ''}>
+								<SelectItem key={lesson.id} value={lesson.id.toString()}>
 									{lesson.title}
 								</SelectItem>
 							))}
@@ -395,15 +244,10 @@ export const QuestionForm = ({
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="explanation">Explanation (Optional)</Label>
-					<Textarea
-						id="explanation"
-						name="explanationHtml"
-						placeholder="Provide an explanation for the correct answer"
-						className="min-h-[100px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
-						value={currentQuestion?.explanationHtml ?? ''}
-						onChange={handleQuestionChange}
-					/>
+					<Label htmlFor="explanationHtml">Explanation (Optional)</Label>
+					<div className="ql-html-container bg-[#151515] text-white">
+						<div id="explanationHtml" ref={quillRef} />
+					</div>
 				</div>
 
 				<div className="flex justify-end">
@@ -413,7 +257,15 @@ export const QuestionForm = ({
 								variant="outline"
 								className="mr-2 border-[#333333] bg-transparent text-white hover:bg-[#1F1F1F]"
 								onClick={() => {
-									setCurrentQuestion(null);
+									setCurrentQuestion({
+										id: uuidv4(),
+										title: '',
+										lessonId: null,
+										type: 'radio',
+										options: [],
+										explanationHtml: '',
+										questionOrder: courseLessonQuestions.length
+									});
 									setEditingQuestionId(null);
 								}}
 							>
@@ -435,7 +287,10 @@ export const QuestionForm = ({
 					) : (
 						<Button
 							className="bg-[#FF5500] text-white hover:bg-[#FF5500]/90"
-							onClick={addQuestion}
+							onClick={() => {
+								addQuestion();
+								quill?.setText('');
+							}}
 							disabled={
 								!currentQuestion?.title ||
 								!currentQuestion.lessonId ||

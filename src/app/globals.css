@@ -162,3 +162,7 @@
 .html-content > * {
     @apply mb-4;
 }
+
+.ql-html-container .ql-container {
+    @apply h-[300px];
+}

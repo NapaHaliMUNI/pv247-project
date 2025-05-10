@@ -1,9 +1,11 @@
 'use client';
 
 import type React from 'react';
-import { useState } from 'react';
-import { Plus, Video } from 'lucide-react';
+import { useEffect } from 'react';
+import { Plus } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,69 +17,37 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import type { NewCourse } from '@/db/schema/course';
-import type { NewCourseLesson } from '@/db/schema/course-lesson';
+import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
+import { getToolbarTemplate } from '@/utils/quillToolbarTemplate';
 
-type LessonFormProps = {
-	course: NewCourse;
-	courseLessonsState: [NewCourseLesson[], (lessons: NewCourseLesson[]) => void];
-};
+export const LessonForm = () => {
+	const {
+		course,
+		courseLessons,
+		currentLesson,
+		setCurrentLesson,
+		editingLessonId,
+		setEditingLessonId,
+		handleLessonChange,
+		addLesson
+	} = useCourseMakerContext();
 
-export const LessonForm = ({
-	course,
-	courseLessonsState: [courseLessons, setCourseLessons]
-}: LessonFormProps) => {
-	const [currentLesson, setCurrentLesson] = useState<NewCourseLesson | null>(
-		null
-	);
-	const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
+	const { quill, quillRef } = useQuill({
+		modules: {
+			toolbar: getToolbarTemplate()
+		}
+	});
 
-	// Handle lesson change
-	const handleLessonChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = e.target;
-		if (!currentLesson) {
-			// Initialize with defaults for required properties
-			setCurrentLesson({
-				id: uuidv4(),
-				title: name === 'title' ? value : '',
-				courseId: course.id,
-				lessonOrder: courseLessons.length,
-				contentHtml: name === 'contentHtml' ? value : '',
-				videoUrl: ''
-			});
-		} else {
-			setCurrentLesson({
-				...currentLesson,
-				[name]: value
+	useEffect(() => {
+		if (quill) {
+			quill.on('text-change', () => {
+				setCurrentLesson(prev => ({
+					...prev,
+					contentHtml: quill.root.innerHTML
+				}));
 			});
 		}
-	};
-
-	// Add lesson
-	const addLesson = () => {
-		if (!currentLesson?.title || !currentLesson.contentHtml) return;
-
-		const newLesson = {
-			...currentLesson,
-			id: editingLessonId ?? uuidv4(),
-			lessonOrder: editingLessonId
-				? (courseLessons.find(l => l.id === editingLessonId)?.lessonOrder ??
-					courseLessons.length)
-				: courseLessons.length
-		};
-
-		const updatedLessons = editingLessonId
-			? courseLessons.map(lesson =>
-					lesson.id === editingLessonId ? newLesson : lesson
-				)
-			: [...courseLessons, newLesson];
-		setCourseLessons(updatedLessons);
-		setCurrentLesson(null);
-		setEditingLessonId(null);
-	};
+	}, [quill, setCurrentLesson]);
 
 	return (
 		<Card className="border-[#2A2A2A] bg-[#1A1A1A] text-white">
@@ -113,28 +83,23 @@ export const LessonForm = ({
 							value={currentLesson?.videoUrl ?? ''}
 							onChange={handleLessonChange}
 						/>
-						<Button
+						{/* <Button
 							variant="outline"
 							className="border-[#333333] bg-transparent text-white hover:bg-[#1F1F1F]"
 							type="button"
 						>
 							<Video className="mr-2 h-4 w-4" />
 							Preview
-						</Button>
+						</Button> */}
 					</div>
 					<p className="text-xs text-[#ABABAB]">Supports YouTube links only</p>
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="lessonContent">Lesson Content</Label>
-					<Textarea
-						id="lessonContent"
-						name="contentHtml"
-						placeholder="Provide the theory content for this lesson"
-						className="min-h-[300px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
-						value={currentLesson?.contentHtml}
-						onChange={handleLessonChange}
-					/>
+					<Label htmlFor="lessonContentHtml">Lesson Content</Label>
+					<div className="ql-html-container bg-[#151515] text-white">
+						<div id="lessonContentHtml" ref={quillRef} />
+					</div>
 				</div>
 
 				<div className="flex justify-end">
@@ -144,7 +109,14 @@ export const LessonForm = ({
 								variant="outline"
 								className="mr-2 border-[#333333] bg-transparent text-white hover:bg-[#1F1F1F]"
 								onClick={() => {
-									setCurrentLesson(null);
+									setCurrentLesson({
+										id: uuidv4(),
+										title: '',
+										videoUrl: '',
+										contentHtml: '',
+										lessonOrder: courseLessons.length,
+										courseId: course.id
+									});
 									setEditingLessonId(null);
 								}}
 							>
@@ -161,7 +133,10 @@ export const LessonForm = ({
 					) : (
 						<Button
 							className="bg-[#FF5500] text-white hover:bg-[#FF5500]/90"
-							onClick={addLesson}
+							onClick={() => {
+								addLesson();
+								quill?.setText('');
+							}}
 							disabled={!currentLesson?.title || !currentLesson.contentHtml}
 						>
 							<Plus className="mr-2 h-4 w-4" />

@@ -48,7 +48,7 @@ export const course = sqliteTable('course', {
 	title: text('title').notNull(),
 	imageUrl: text('image_url'),
 	shortDescription: text('short_description').notNull(),
-	longDescription: text('long_description').notNull(),
+	longDescriptionHtml: text('long_description_html').notNull(),
 	category: text('category', {
 		enum: courseCategorySchema.options
 	}),
@@ -75,7 +75,12 @@ export const courseRelations = relations(course, ({ one, many }) => ({
 		fields: [course.updatedBy],
 		references: [user.id]
 	}),
-	coursePrerequisites: many(coursePrerequisites),
+	prerequisites: many(coursePrerequisites, {
+		relationName: 'courseToPrerequisites'
+	}),
+	prerequisiteFor: many(coursePrerequisites, {
+		relationName: 'prerequisiteToCourses'
+	}),
 	courseLessons: many(courseLesson)
 }));
 
@@ -84,7 +89,7 @@ export const courseSelectSchema = createSelectSchema(course, {
 	title: schema => schema.max(256),
 	imageUrl: schema => schema.url().optional(),
 	shortDescription: schema => schema.max(512),
-	longDescription: schema => schema.max(2048),
+	longDescriptionHtml: schema => schema.max(2048),
 	category: () => courseCategorySchema,
 	difficulty: () => courseDifficultySchema,
 	duration: () => courseDurationSchema,
@@ -98,7 +103,7 @@ export const courseInsertSchema = createInsertSchema(course, {
 	title: schema => schema.max(256),
 	imageUrl: schema => schema.url().optional(),
 	shortDescription: schema => schema.max(512),
-	longDescription: schema => schema.max(2048),
+	longDescriptionHtml: schema => schema.max(2048),
 	category: () => courseCategorySchema,
 	difficulty: () => courseDifficultySchema,
 	duration: () => courseDurationSchema,

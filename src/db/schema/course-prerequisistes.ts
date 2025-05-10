@@ -1,4 +1,9 @@
-import { sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import {
+	primaryKey,
+	sqliteTable,
+	text,
+	uniqueIndex
+} from 'drizzle-orm/sqlite-core';
 import { relations, sql } from 'drizzle-orm';
 import type { z } from 'zod';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
@@ -15,6 +20,8 @@ export const coursePrerequisites = sqliteTable(
 		deletedAt: text('deleted_at').default(sql`NULL`) // Soft delete
 	},
 	table => [
+		// Primary key to ensure each course-prerequisite pair is unique
+		primaryKey({ columns: [table.courseId, table.prerequisiteCourseId] }),
 		// Unique constraint to prevent duplicate entries
 		uniqueIndex('unique_course_prerequisite').on(
 			table.courseId,
@@ -26,13 +33,15 @@ export const coursePrerequisites = sqliteTable(
 export const coursePrerequisitesRelations = relations(
 	coursePrerequisites,
 	({ one }) => ({
-		course: one(course, {
+		mainCourse: one(course, {
 			fields: [coursePrerequisites.courseId],
-			references: [course.id]
+			references: [course.id],
+			relationName: 'courseToPrerequisites'
 		}),
 		prerequisiteCourse: one(course, {
 			fields: [coursePrerequisites.prerequisiteCourseId],
-			references: [course.id]
+			references: [course.id],
+			relationName: 'prerequisiteToCourses'
 		})
 	})
 );

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "7421fd9f-c948-4090-9eb1-f95386947464",
+  "id": "4e83eb42-34ec-480a-88de-ff25decaab5d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "course_lesson_question": {
@@ -267,7 +267,15 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "course_prerequisites_course_id_prerequisite_course_id_pk": {
+          "columns": [
+            "course_id",
+            "prerequisite_course_id"
+          ],
+          "name": "course_prerequisites_course_id_prerequisite_course_id_pk"
+        }
+      },
       "uniqueConstraints": {},
       "checkConstraints": {}
     },

@@ -1,7 +1,9 @@
 'use client';
 
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 
 import {
 	Card,
@@ -19,51 +21,49 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import {
-	type NewCourse,
 	courseCategorySchema,
 	courseDifficultySchema,
 	courseDurationSchema
 } from '@/db/schema/course';
 import { MultiSelect } from '@/components/ui/multi-select';
+import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
+import { getToolbarTemplate } from '@/utils/quillToolbarTemplate';
 
 // Sample prerequisite courses
-const prerequisiteCourses = [
+const prerequisiteCoursesForMultiSelect = [
 	{ value: '1', label: 'CS2 Fundamentals: From Beginner to Competitive' },
 	{ value: '2', label: 'Advanced Weapon Mastery: Rifles' },
 	{ value: '3', label: 'Pro Team Strategies: T-Side Executes' },
 	{ value: '4', label: 'Map Mastery: Dust 2 Complete Guide' }
 ];
 
-type CourseDetailsFormProps = {
-	courseState: [NewCourse, (course: NewCourse) => void];
-};
+export const CourseDetailsForm = () => {
+	const {
+		course,
+		setCourse,
+		selectedPrerequisiteCourses,
+		setSelectedPrerequisiteCourses,
+		handleCourseChange,
+		handleSelectChange
+	} = useCourseMakerContext();
 
-export const CourseDetailsForm = ({
-	courseState: [course, setCourse]
-}: CourseDetailsFormProps) => {
-	const [selectedPrerequisiteCourses, setSelectedPrerequisiteCourses] =
-		useState<string[]>([]);
+	const { quill, quillRef } = useQuill({
+		modules: {
+			toolbar: getToolbarTemplate()
+		}
+	});
 
-	// Handle course details change
-	const handleCourseChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = e.target;
-		setCourse({
-			...course,
-			[name]: value
-		});
-	};
-
-	// Handle select changes
-	const handleSelectChange = (name: string, value: string) => {
-		setCourse({
-			...course,
-			[name]: value
-		});
-	};
+	useEffect(() => {
+		if (quill) {
+			quill.on('text-change', () => {
+				setCourse(prev => ({
+					...prev,
+					longDescriptionHtml: quill.root.innerHTML
+				}));
+			});
+		}
+	}, [quill, setCourse]);
 
 	return (
 		<Card className="border-[#2A2A2A] bg-[#1A1A1A] text-white">
@@ -79,7 +79,7 @@ export const CourseDetailsForm = ({
 					<Input
 						id="title"
 						name="title"
-						placeholder="e.g. Advanced AWP Techniques"
+						placeholder="e.g. Advanced AWP Movement Guide"
 						className="border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
 						value={course.title}
 						onChange={handleCourseChange}
@@ -99,15 +99,10 @@ export const CourseDetailsForm = ({
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="longDescription">Detailed Description</Label>
-					<Textarea
-						id="longDescription"
-						name="longDescription"
-						placeholder="Provide a detailed description of what students will learn"
-						className="min-h-[150px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
-						value={course.longDescription}
-						onChange={handleCourseChange}
-					/>
+					<Label htmlFor="longDescriptionHtml">Detailed Description</Label>
+					<div className="ql-html-container bg-[#151515] text-white">
+						<div id="longDescriptionHtml" ref={quillRef} />
+					</div>
 				</div>
 
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -176,7 +171,7 @@ export const CourseDetailsForm = ({
 						</Label>
 						<MultiSelect
 							className="border-[#333333] bg-[#151515] text-white"
-							options={prerequisiteCourses}
+							options={prerequisiteCoursesForMultiSelect}
 							selectedValues={selectedPrerequisiteCourses}
 							setSelectedValues={setSelectedPrerequisiteCourses}
 							placeholder="Select prerequisite courses"
