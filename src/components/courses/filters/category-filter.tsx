@@ -1,3 +1,7 @@
+'use client';
+
+import type React from 'react';
+
 import {
 	Select,
 	SelectContent,
@@ -6,24 +10,35 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { useFiltersContext } from '@/store/courses/filters-context';
+import {
+	type CourseCategory,
+	courseCategorySchema,
+	type CourseDifficulty,
+	courseDifficultySchema
+} from '@/db/schema/course';
+import { MultiSelect } from '@/components/ui/multi-select';
 
-const CategoryFilter = ({ categories }: { categories: string[] }) => {
-	const { selectedCategory, setSelectedCategory } = useFiltersContext();
+const courseCategoryOptions = courseCategorySchema.options.map(category => ({
+	label: category,
+	value: category
+	// icon can be added here if needed
+}));
+
+const CategoryFilter = () => {
+	const { selectedCategories, setSelectedCategories } = useFiltersContext();
 	return (
 		<div>
 			<h4 className="mb-2 text-sm font-medium">Category</h4>
-			<Select value={selectedCategory} onValueChange={setSelectedCategory}>
-				<SelectTrigger className="border-[#333333] bg-[#151515] text-white">
-					<SelectValue placeholder="Select category" />
-				</SelectTrigger>
-				<SelectContent className="border-[#333333] bg-[#151515] text-white">
-					{categories.map(category => (
-						<SelectItem key={category} value={category}>
-							{category}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
+			<MultiSelect
+				className="border-[#333333] bg-[#151515] text-white"
+				options={courseCategoryOptions}
+				selectedValues={selectedCategories}
+				setSelectedValues={values =>
+					setSelectedCategories(values as CourseCategory[])
+				}
+				defaultValue={selectedCategories}
+				placeholder="Select categories"
+			/>
 		</div>
 	);
 };

@@ -5,7 +5,7 @@ import { type User, user } from '../schema/user';
 import { userRoles } from '../schema/user-roles';
 import { userCourses } from '../schema/user-courses';
 import { type Role } from '../schema/role';
-import { type Course } from '../schema/course';
+import { course, type Course } from '../schema/course';
 import { type CourseLesson, courseLesson } from '../schema/course-lesson';
 import {
 	type CourseLessonQuestion,
@@ -85,4 +85,11 @@ export const getCourseLessonQuestions = async (
 	if (!courseLessonQuestions) return [];
 
 	return courseLessonQuestions;
+};
+
+export const getAllCourses = async () => await db.query.course.findMany();
+
+export const getAllCoursesCount = async () => {
+	const countResult = await db.select({ count: count() }).from(course);
+	return countResult[0].count;
 };

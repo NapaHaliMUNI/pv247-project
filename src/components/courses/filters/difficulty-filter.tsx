@@ -1,3 +1,5 @@
+'use client';
+
 import type React from 'react';
 
 import {
@@ -22,7 +24,7 @@ const courseDifficultyOptions = courseDifficultySchema.options.map(
 	})
 );
 
-const DifficultyFilter = ({ difficulties }: { difficulties: string[] }) => {
+const DifficultyFilter = () => {
 	const { selectedDifficulties, setSelectedDifficulties } = useFiltersContext();
 
 	return (

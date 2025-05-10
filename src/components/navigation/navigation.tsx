@@ -10,7 +10,7 @@ import NavigationMenuLink from '@/components/navigation/navigation-menu-link';
 import { Button } from '@/components/ui/button';
 
 const Navigation = () => (
-	<header className="bg-background sticky top-0 z-100 border-b border-[#2A2A2A]">
+	<header className="bg-background sticky top-0 z-10 border-b border-[#2A2A2A]">
 		<div className="container mx-auto p-3">
 			<nav className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
@@ -28,7 +28,7 @@ const Navigation = () => (
 					</Link>
 				</div>
 				<div className="hidden items-center space-x-6 md:flex">
-					<NavigationMenuLink href="/">Courses</NavigationMenuLink>
+					<NavigationMenuLink href="/courses">Courses</NavigationMenuLink>
 					<NavigationMenuLink href="/feeds">Feeds</NavigationMenuLink>
 				</div>
 				<div className="flex items-center gap-3">
