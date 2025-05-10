@@ -17,40 +17,16 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import type { NewCourseLesson } from '@/db/schema/course-lesson';
-import type { NewCourseLessonQuestion } from '@/db/schema/course-lesson-question';
+import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
 
-type QuestionListProps = {
-	courseLessons: NewCourseLesson[];
-	courseLessonQuestionsState: [
-		NewCourseLessonQuestion[],
-		(questions: NewCourseLessonQuestion[]) => void
-	];
-};
-
-export const QuestionList = ({
-	courseLessons,
-	courseLessonQuestionsState: [courseLessonQuestions, setCourseLessonQuestions]
-}: QuestionListProps) => {
-	// Get questions for a specific lesson
-	const getQuestionsForLesson = (lessonId: string) =>
-		courseLessonQuestions.filter(question => question.lessonId === lessonId);
-
-	// Edit question
-	const editQuestion = (id: string) => {
-		// TODO: Implement edit question logic
-		const question = courseLessonQuestions.find(q => q.id === id);
-		if (!question) return;
-		console.log('Edit question:', id);
-	};
-
-	// Delete question
-	const deleteQuestion = (id: string) => {
-		setCourseLessonQuestions(
-			courseLessonQuestions.filter(question => question.id !== id)
-		);
-		console.log('Deleted question:', id);
-	};
+export const QuestionList = () => {
+	const {
+		courseLessons,
+		courseLessonQuestions,
+		getQuestionsForLesson,
+		editQuestion,
+		deleteQuestion
+	} = useCourseMakerContext();
 
 	return (
 		<Card className="border-[#2A2A2A] bg-[#1A1A1A] text-white">
@@ -65,11 +41,11 @@ export const QuestionList = ({
 				{courseLessons.length > 0 ? (
 					<Accordion type="multiple" className="w-full">
 						{courseLessons.map(lesson => {
-							const lessonQuestions = getQuestionsForLesson(lesson.id ?? '');
+							const lessonQuestions = getQuestionsForLesson(lesson.id);
 							return (
 								<AccordionItem
 									key={lesson.id}
-									value={lesson.id?.toString() ?? ''}
+									value={lesson.id.toString()}
 									className="border-[#2A2A2A]"
 								>
 									<AccordionTrigger className="py-3 text-white hover:text-white hover:no-underline">

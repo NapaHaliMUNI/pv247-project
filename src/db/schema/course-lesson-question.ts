@@ -10,13 +10,15 @@ import { user } from './user';
 export const questionTypeSchema = z.enum(['radio', 'checkbox', 'true-false']);
 export type QuestionType = z.infer<typeof questionTypeSchema>;
 
-export const courseQuestionOption = z.object({
-	id: z.number(),
+export const courseLessonQuestionOption = z.object({
+	id: z.string(),
 	text: z.string(),
 	isCorrect: z.boolean()
 });
 
-export type CourseQuestionOption = z.infer<typeof courseQuestionOption>;
+export type CourseLessonQuestionOption = z.infer<
+	typeof courseLessonQuestionOption
+>;
 
 export const courseLessonQuestion = sqliteTable('course_lesson_question', {
 	id: text('id').primaryKey(),
@@ -25,7 +27,7 @@ export const courseLessonQuestion = sqliteTable('course_lesson_question', {
 	type: text('type', { enum: questionTypeSchema.options }).notNull(),
 	title: text('title').notNull(),
 	options: text('options', { mode: 'json' })
-		.$type<CourseQuestionOption[]>()
+		.$type<CourseLessonQuestionOption[]>()
 		.notNull(), // JSON string with question details
 	explanationHtml: text('explanation_html'),
 	createdAt: text('created_at').default(sql`(CURRENT_DATE)`),

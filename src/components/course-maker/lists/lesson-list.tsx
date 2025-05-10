@@ -11,31 +11,10 @@ import {
 	CardTitle
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { NewCourseLesson } from '@/db/schema/course-lesson';
+import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
 
-type LessonListProps = {
-	courseLessons: NewCourseLesson[];
-	setCourseLessons: (lessons: NewCourseLesson[]) => void;
-};
-
-export const LessonList = ({
-	courseLessons,
-	setCourseLessons
-}: LessonListProps) => {
-	// Edit lesson
-	const editLesson = (id: string) => {
-		const lesson = courseLessons.find(l => l.id === id);
-		if (!lesson) return;
-
-		// This would typically update the currentLesson state in the parent component
-		// For this example, we'll just log it
-		console.log('Edit lesson:', lesson);
-	};
-
-	// Delete lesson
-	const deleteLesson = (id: string) => {
-		setCourseLessons(courseLessons.filter(lesson => lesson.id !== id));
-	};
+export const LessonList = () => {
+	const { courseLessons, editLesson, deleteLesson } = useCourseMakerContext();
 
 	return (
 		<Card className="border-[#2A2A2A] bg-[#1A1A1A] text-white">
