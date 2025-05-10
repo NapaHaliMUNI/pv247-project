@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
+import { getToolbarTemplate } from '@/utils/quillToolbarTemplate';
 
 export const LessonForm = () => {
 	const {
@@ -31,7 +32,11 @@ export const LessonForm = () => {
 		addLesson
 	} = useCourseMakerContext();
 
-	const { quill, quillRef } = useQuill();
+	const { quill, quillRef } = useQuill({
+		modules: {
+			toolbar: getToolbarTemplate()
+		}
+	});
 
 	useEffect(() => {
 		if (quill) {
@@ -91,22 +96,13 @@ export const LessonForm = () => {
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="lessonContent">Lesson Content</Label>
-					<div style={{ height: 300 }}>
-						<div ref={quillRef} />
+					<Label htmlFor="lessonContentHtml">Lesson Content</Label>
+					<div className="ql-html-container bg-[#151515] text-white">
+						<div id="lessonContentHtml" ref={quillRef} />
 					</div>
-
-					{/* <Textarea
-						id="lessonContent"
-						name="contentHtml"
-						placeholder="Provide the theory content for this lesson"
-						className="min-h-[300px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
-						value={currentLesson?.contentHtml}
-						onChange={handleLessonChange}
-					/> */}
 				</div>
 
-				<div className="mt-15 flex justify-end">
+				<div className="flex justify-end">
 					{editingLessonId ? (
 						<>
 							<Button

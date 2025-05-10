@@ -27,6 +27,7 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
+import { getToolbarTemplate } from '@/utils/quillToolbarTemplate';
 
 export const QuestionForm = () => {
 	const {
@@ -45,7 +46,11 @@ export const QuestionForm = () => {
 		addQuestion
 	} = useCourseMakerContext();
 
-	const { quill, quillRef } = useQuill();
+	const { quill, quillRef } = useQuill({
+		modules: {
+			toolbar: getToolbarTemplate()
+		}
+	});
 
 	useEffect(() => {
 		if (quill) {
@@ -239,13 +244,13 @@ export const QuestionForm = () => {
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="explanation">Explanation (Optional)</Label>
-					<div style={{ height: 300 }}>
-						<div ref={quillRef} />
+					<Label htmlFor="explanationHtml">Explanation (Optional)</Label>
+					<div className="ql-html-container bg-[#151515] text-white">
+						<div id="explanationHtml" ref={quillRef} />
 					</div>
 				</div>
 
-				<div className="mt-15 flex justify-end">
+				<div className="flex justify-end">
 					{editingQuestionId ? (
 						<>
 							<Button

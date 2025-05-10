@@ -77,7 +77,7 @@ export const CoursePreview = () => {
 						About this course
 					</h3>
 					<p className="text-[#ABABAB]">
-						{course.longDescription ||
+						{course.longDescriptionHtml ||
 							'Detailed course description will appear here.'}
 					</p>
 				</div>

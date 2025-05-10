@@ -30,6 +30,12 @@ type CourseMakerContextType = {
 	selectedPrerequisiteCourses: string[];
 	setSelectedPrerequisiteCourses: Dispatch<React.SetStateAction<string[]>>;
 
+	// Course actions
+	handleCourseChange: (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => void;
+	handleSelectChange: (name: string, value: string) => void;
+
 	// ----------------------------------------------------------------------
 
 	// Course lessons state
@@ -108,7 +114,7 @@ const initialCourse: NewCourse = {
 	id: uuidv4(),
 	title: '',
 	shortDescription: '',
-	longDescription: '',
+	longDescriptionHtml: '',
 	duration: null,
 	difficulty: null,
 	category: null,
@@ -174,6 +180,26 @@ export const CourseMakerProvider = ({
 	const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
 		null
 	);
+
+	// Handle course change
+	const handleCourseChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+			const { name, value } = e.target;
+			setCourse(prev => ({
+				...prev,
+				[name]: value
+			}));
+		},
+		[]
+	);
+
+	// Handle select changes
+	const handleSelectChange = useCallback((name: string, value: string) => {
+		setCourse(prev => ({
+			...prev,
+			[name]: value
+		}));
+	}, []);
 
 	// Handle lesson change
 	const handleLessonChange = useCallback(
@@ -466,6 +492,8 @@ export const CourseMakerProvider = ({
 				setCurrentLesson,
 				editingLessonId,
 				setEditingLessonId,
+				handleCourseChange,
+				handleSelectChange,
 				handleLessonChange,
 				addLesson,
 				editLesson,

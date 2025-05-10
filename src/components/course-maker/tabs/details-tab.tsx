@@ -29,6 +29,7 @@ export const CourseDetailsTab = () => {
 					disabled={
 						!course.title ||
 						!course.shortDescription ||
+						!course.longDescriptionHtml ||
 						!course.difficulty ||
 						!course.duration ||
 						!course.category

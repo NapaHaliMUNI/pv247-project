@@ -1,6 +1,9 @@
 'use client';
 
 import type React from 'react';
+import { useEffect } from 'react';
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 
 import {
 	Card,
@@ -18,7 +21,6 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import {
 	courseCategorySchema,
 	courseDifficultySchema,
@@ -26,6 +28,7 @@ import {
 } from '@/db/schema/course';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { useCourseMakerContext } from '@/store/course-maker/course-maker-context';
+import { getToolbarTemplate } from '@/utils/quillToolbarTemplate';
 
 // Sample prerequisite courses
 const prerequisiteCoursesForMultiSelect = [
@@ -40,27 +43,27 @@ export const CourseDetailsForm = () => {
 		course,
 		setCourse,
 		selectedPrerequisiteCourses,
-		setSelectedPrerequisiteCourses
+		setSelectedPrerequisiteCourses,
+		handleCourseChange,
+		handleSelectChange
 	} = useCourseMakerContext();
 
-	// Handle course details change
-	const handleCourseChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = e.target;
-		setCourse({
-			...course,
-			[name]: value
-		});
-	};
+	const { quill, quillRef } = useQuill({
+		modules: {
+			toolbar: getToolbarTemplate()
+		}
+	});
 
-	// Handle select changes
-	const handleSelectChange = (name: string, value: string) => {
-		setCourse({
-			...course,
-			[name]: value
-		});
-	};
+	useEffect(() => {
+		if (quill) {
+			quill.on('text-change', () => {
+				setCourse(prev => ({
+					...prev,
+					longDescriptionHtml: quill.root.innerHTML
+				}));
+			});
+		}
+	}, [quill, setCourse]);
 
 	return (
 		<Card className="border-[#2A2A2A] bg-[#1A1A1A] text-white">
@@ -96,15 +99,10 @@ export const CourseDetailsForm = () => {
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="longDescription">Detailed Description</Label>
-					<Textarea
-						id="longDescription"
-						name="longDescription"
-						placeholder="Provide a detailed description of what will be covered in the course"
-						className="min-h-[150px] border-[#333333] bg-[#151515] text-white focus-visible:ring-[#FF5500]"
-						value={course.longDescription}
-						onChange={handleCourseChange}
-					/>
+					<Label htmlFor="longDescriptionHtml">Detailed Description</Label>
+					<div className="ql-html-container bg-[#151515] text-white">
+						<div id="longDescriptionHtml" ref={quillRef} />
+					</div>
 				</div>
 
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
