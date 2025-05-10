@@ -133,6 +133,36 @@
     }
 }
 
+.html-content {
+    h1 {
+        @apply text-3xl font-bold mb-1;
+    }
+
+    h2 {
+        @apply text-2xl font-bold mb-1;
+    }
+
+    h3 {
+        @apply text-xl font-bold mb-1;
+    }
+
+    ul {
+        @apply list-disc pl-4 marker:font-bold;
+    }
+
+    ol {
+        @apply list-decimal pl-4 marker:font-bold;
+    }
+
+    a {
+        @apply underline hover:text-primary underline-offset-2 transition-colors;
+    }
+}
+
+.html-content > * {
+    @apply mb-4;
+}
+
 .ql-html-container .ql-container {
     @apply h-[300px];
 }

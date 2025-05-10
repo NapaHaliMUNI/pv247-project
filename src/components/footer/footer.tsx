@@ -2,8 +2,11 @@ import { Target } from 'lucide-react';
 import Link from 'next/link';
 
 const Footer = () => (
-	<footer className="min-h-(footer-height) border-t border-[#2A2A2A] bg-[#121212] py-12">
-		<div className="container mx-auto px-4">
+	<footer
+		className="min-h-(footer-height) border-t border-[#2A2A2A] bg-[#1c1c1c] bg-cover py-12 bg-blend-multiply"
+		style={{ backgroundImage: 'url(/footer-bg.jpeg)' }}
+	>
+		<div className="container mx-auto px-4 md:px-8">
 			<div className="flex flex-col items-center justify-between gap-8 md:flex-row">
 				<div className="flex items-center gap-2">
 					<div className="relative h-8 w-8">

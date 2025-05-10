@@ -1,3 +1,5 @@
+'use client';
+
 import {
 	Select,
 	SelectContent,
@@ -6,15 +8,7 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { useFiltersContext } from '@/store/courses/filters-context';
-
-// TODO
-const sortOptions = [
-	'Most Popular',
-	'Newest',
-	'Highest Rated',
-	'Duration (Shortest)',
-	'Duration (Longest)'
-];
+import { courseSortOptions } from '@/db/schema/course';
 
 const Sort = () => {
 	const { selectedSort, setSelectedSort } = useFiltersContext();
@@ -24,7 +18,7 @@ const Sort = () => {
 				<SelectValue placeholder="Sort by" />
 			</SelectTrigger>
 			<SelectContent className="border-[#333333] bg-[#151515] text-white">
-				{sortOptions.map(option => (
+				{courseSortOptions.options.map(option => (
 					<SelectItem key={option} value={option}>
 						{option}
 					</SelectItem>

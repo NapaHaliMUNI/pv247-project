@@ -20,6 +20,8 @@ export const courseDurationSchema = z.enum([
 	'Medium (30-60 minutes)',
 	'Long (60+ minutes)'
 ]);
+export type CourseDuration = z.infer<typeof courseDurationSchema>;
+
 export const courseCategorySchema = z.enum([
 	'Fundamentals',
 	'Weapon Skills',
@@ -28,6 +30,17 @@ export const courseCategorySchema = z.enum([
 	'Utility',
 	'Game Sense'
 ]);
+export type CourseCategory = z.infer<typeof courseCategorySchema>;
+
+export const courseSortOptions = z.enum([
+	'Most Popular',
+	'Newest',
+	'Duration (Shortest)',
+	'Duration (Longest)',
+	'Difficulty (Easiest)',
+	'Difficulty (Hardest)'
+]);
+export type CourseSortOption = z.infer<typeof courseSortOptions>;
 
 // Create the table in a function
 export const course = sqliteTable('course', {
