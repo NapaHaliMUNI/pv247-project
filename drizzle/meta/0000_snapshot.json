@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "4e83eb42-34ec-480a-88de-ff25decaab5d",
+  "id": "c04e39cf-a054-4e6c-8665-dce2364c1d86",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "course_lesson_question": {
@@ -310,8 +310,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "long_description": {
-          "name": "long_description",
+        "long_description_html": {
+          "name": "long_description_html",
           "type": "text",
           "primaryKey": false,
           "notNull": true,

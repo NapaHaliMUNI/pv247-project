@@ -1,3 +1,5 @@
+'use client';
+
 import {
 	createContext,
 	type Dispatch,
@@ -8,8 +10,9 @@ import {
 } from 'react';
 
 import {
+	type CourseCategory,
 	type CourseDifficulty,
-	type courseDifficultySchema
+	type CourseDuration
 } from '@/db/schema/course';
 
 type FiltersContextType = {
@@ -17,12 +20,12 @@ type FiltersContextType = {
 	setSearchQuery: Dispatch<SetStateAction<string>>;
 	selectedDifficulties: CourseDifficulty[];
 	setSelectedDifficulties: Dispatch<SetStateAction<CourseDifficulty[]>>;
-	selectedCategory: string;
-	setSelectedCategory: Dispatch<SetStateAction<string>>;
+	selectedCategories: CourseCategory[];
+	setSelectedCategories: Dispatch<SetStateAction<CourseCategory[]>>;
 	selectedSort: string;
 	setSelectedSort: Dispatch<SetStateAction<string>>;
-	selectedDuration: string;
-	setSelectedDuration: Dispatch<SetStateAction<string>>;
+	selectedDurations: CourseDuration[];
+	setSelectedDurations: Dispatch<SetStateAction<CourseDuration[]>>;
 	resetFilters: () => void;
 };
 
@@ -44,20 +47,21 @@ export const FiltersContextProvider = ({ children }: PropsWithChildren) => {
 	const [selectedDifficulties, setSelectedDifficulties] = useState<
 		CourseDifficulty[]
 	>([]);
-	const [selectedCategory, setSelectedCategory] = useState('All');
+	const [selectedCategories, setSelectedCategories] = useState<
+		CourseCategory[]
+	>([]);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedSort, setSelectedSort] = useState('Most Popular');
-	const [selectedDuration, setSelectedDuration] = useState('');
-
-	console.log('selectedDifficulties', selectedDifficulties);
+	const [selectedDurations, setSelectedDurations] = useState<CourseDuration[]>(
+		[]
+	);
 
 	const resetFilters = () => {
-		console.log('resetFilters');
-		// TODO: reset all filters including search bar
 		setSelectedDifficulties([]);
-		// setSearchQuery('');
-		// setSelectedSort('Most Popular');
-		// setSelectedTags([]);
+		setSelectedCategories([]);
+		setSelectedDurations([]);
+		setSearchQuery('');
+		setSelectedSort('Most Popular');
 	};
 
 	return (
@@ -67,12 +71,12 @@ export const FiltersContextProvider = ({ children }: PropsWithChildren) => {
 				setSearchQuery,
 				selectedDifficulties,
 				setSelectedDifficulties,
-				selectedCategory,
-				setSelectedCategory,
+				selectedCategories,
+				setSelectedCategories,
 				selectedSort,
 				setSelectedSort,
-				selectedDuration,
-				setSelectedDuration,
+				selectedDurations,
+				setSelectedDurations,
 				resetFilters
 			}}
 		>
