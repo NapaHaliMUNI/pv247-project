@@ -58,6 +58,7 @@ export const CourseDetailsForm = () => {
 		if (quill) {
 			quill.clipboard.dangerouslyPasteHTML(course.longDescriptionHtml);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [quill]);
 
 	useEffect(() => {

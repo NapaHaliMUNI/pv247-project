@@ -38,9 +38,12 @@ export const LessonList = () => {
 								</div>
 								<div className="flex-grow">
 									<h4 className="font-medium text-white">{lesson.title}</h4>
-									<p className="mt-1 line-clamp-1 text-sm text-[#ABABAB]">
-										{lesson.contentHtml.substring(0, 60)}...
-									</p>
+									<div
+										className="mt-1 line-clamp-1 text-sm text-[#ABABAB]"
+										dangerouslySetInnerHTML={{
+											__html: `${lesson.contentHtml.substring(0, 60)}...`
+										}}
+									/>
 									{lesson.videoUrl ? (
 										<Badge className="mt-2 flex w-fit items-center gap-1 bg-[#4BB4E6]/10 text-[#4BB4E6]">
 											<Video className="h-3 w-3" />

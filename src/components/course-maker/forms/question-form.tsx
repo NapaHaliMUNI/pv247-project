@@ -58,6 +58,7 @@ export const QuestionForm = () => {
 				currentQuestion.explanationHtml ?? ''
 			);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [quill, editingQuestionId]);
 
 	useEffect(() => {

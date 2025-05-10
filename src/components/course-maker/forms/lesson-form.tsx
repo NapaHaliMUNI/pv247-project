@@ -43,6 +43,7 @@ export const LessonForm = () => {
 			console.log(currentLesson);
 			quill.clipboard.dangerouslyPasteHTML(currentLesson.contentHtml);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [quill, editingLessonId]);
 
 	useEffect(() => {

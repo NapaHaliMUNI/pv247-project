@@ -76,10 +76,14 @@ export const CoursePreview = () => {
 					<h3 className="mb-3 text-lg font-bold text-white">
 						About this course
 					</h3>
-					<p className="text-[#ABABAB]">
-						{course.longDescriptionHtml ||
-							'Detailed course description will appear here.'}
-					</p>
+					<div
+						className="text-[#ABABAB]"
+						dangerouslySetInnerHTML={{
+							__html:
+								course.longDescriptionHtml ||
+								'Short course description will appear here.'
+						}}
+					/>
 				</div>
 
 				{selectedPrerequisiteCourses.length > 0 && (
@@ -146,9 +150,12 @@ export const CoursePreview = () => {
 												<h4 className="mb-2 font-medium text-white">
 													Lesson Content
 												</h4>
-												<p className="text-[#ABABAB]">
-													{lesson.contentHtml.substring(0, 150)}...
-												</p>
+												<div
+													className="text-[#ABABAB]"
+													dangerouslySetInnerHTML={{
+														__html: `${lesson.contentHtml.substring(0, 150)}...`
+													}}
+												/>
 											</div>
 
 											{lessonQuestions.length > 0 && (

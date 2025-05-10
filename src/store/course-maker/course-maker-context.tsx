@@ -148,12 +148,7 @@ export const CourseMakerProvider = ({
 	onSave
 }: {
 	children: ReactNode;
-	onSave?: (
-		course: NewCourse,
-		courseLessons: NewCourseLesson[],
-		courseQuestions: NewCourseLessonQuestion[],
-		coursePrerequisites: string[]
-	) => void;
+	onSave?: (courseId: NewCourse['id']) => void;
 }) => {
 	// Current step and tab state
 	const [currentStep, setCurrentStep] = useState(1);
@@ -449,12 +444,7 @@ export const CourseMakerProvider = ({
 		console.log('Selected prerequisite courses:', selectedPrerequisiteCourses);
 
 		if (onSave) {
-			onSave(
-				course,
-				courseLessons,
-				courseLessonQuestions,
-				selectedPrerequisiteCourses
-			);
+			onSave(course.id);
 		}
 	}, [
 		course,
