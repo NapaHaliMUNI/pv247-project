@@ -43,7 +43,7 @@ type CourseMakerContextType = {
 	setCourseLessons: Dispatch<React.SetStateAction<NewCourseLesson[]>>;
 
 	// Current lesson state
-	currentLesson: NewCourseLesson | null;
+	currentLesson: NewCourseLesson;
 	setCurrentLesson: Dispatch<React.SetStateAction<NewCourseLesson>>;
 	editingLessonId: string | null;
 	setEditingLessonId: Dispatch<React.SetStateAction<string | null>>;
@@ -65,7 +65,7 @@ type CourseMakerContextType = {
 	>;
 
 	// Current question state
-	currentQuestion: NewCourseLessonQuestion | null;
+	currentQuestion: NewCourseLessonQuestion;
 	setCurrentQuestion: Dispatch<React.SetStateAction<NewCourseLessonQuestion>>;
 	editingQuestionId: string | null;
 	setEditingQuestionId: Dispatch<React.SetStateAction<string | null>>;

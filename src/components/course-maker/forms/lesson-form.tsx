@@ -40,6 +40,13 @@ export const LessonForm = () => {
 
 	useEffect(() => {
 		if (quill) {
+			console.log(currentLesson);
+			quill.clipboard.dangerouslyPasteHTML(currentLesson.contentHtml);
+		}
+	}, [quill, editingLessonId]);
+
+	useEffect(() => {
+		if (quill) {
 			quill.on('text-change', () => {
 				setCurrentLesson(prev => ({
 					...prev,

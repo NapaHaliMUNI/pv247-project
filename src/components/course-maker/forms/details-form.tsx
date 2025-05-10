@@ -56,6 +56,12 @@ export const CourseDetailsForm = () => {
 
 	useEffect(() => {
 		if (quill) {
+			quill.clipboard.dangerouslyPasteHTML(course.longDescriptionHtml);
+		}
+	}, [quill]);
+
+	useEffect(() => {
+		if (quill) {
 			quill.on('text-change', () => {
 				setCourse(prev => ({
 					...prev,

@@ -53,9 +53,7 @@ export const LessonList = () => {
 										variant="ghost"
 										size="icon"
 										className="h-8 w-8 text-[#ABABAB] hover:bg-[#1F1F1F] hover:text-white"
-										onClick={() =>
-											lesson.id !== undefined && editLesson(lesson.id)
-										}
+										onClick={() => editLesson(lesson.id)}
 									>
 										<Edit className="h-4 w-4" />
 									</Button>
@@ -63,9 +61,7 @@ export const LessonList = () => {
 										variant="ghost"
 										size="icon"
 										className="h-8 w-8 text-[#ABABAB] hover:bg-[#1F1F1F] hover:text-white"
-										onClick={() =>
-											lesson.id !== undefined && deleteLesson(lesson.id)
-										}
+										onClick={() => deleteLesson(lesson.id)}
 									>
 										<Trash2 className="h-4 w-4" />
 									</Button>

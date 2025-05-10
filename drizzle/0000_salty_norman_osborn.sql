@@ -45,7 +45,7 @@ CREATE TABLE `course` (
 	`title` text NOT NULL,
 	`image_url` text,
 	`short_description` text NOT NULL,
-	`long_description` text NOT NULL,
+	`long_description_html` text NOT NULL,
 	`category` text,
 	`difficulty` text,
 	`duration` text,

@@ -54,6 +54,14 @@ export const QuestionForm = () => {
 
 	useEffect(() => {
 		if (quill) {
+			quill.clipboard.dangerouslyPasteHTML(
+				currentQuestion.explanationHtml ?? ''
+			);
+		}
+	}, [quill, editingQuestionId]);
+
+	useEffect(() => {
+		if (quill) {
 			quill.on('text-change', () => {
 				setCurrentQuestion(prev => ({
 					...prev,
